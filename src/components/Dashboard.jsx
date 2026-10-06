@@ -471,13 +471,13 @@ export default function Dashboard({
                           <button
                             type="button"
                             onClick={() => onOpenLabExams && onOpenLabExams(c)}
-                            className="btn btn-sm"
+                            className="btn btn-sm btn-responsive-compact"
                             style={{
                               padding: '5px 8px',
                               fontSize: '0.74rem',
-                              background: 'rgba(2, 132, 199, 0.15)',
-                              border: '1px solid rgba(2, 132, 199, 0.35)',
-                              color: '#38bdf8',
+                              background: 'rgba(2, 132, 199, 0.1)',
+                              border: '1px solid rgba(2, 132, 199, 0.3)',
+                              color: '#0284c7',
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: 4
@@ -485,9 +485,9 @@ export default function Dashboard({
                             title="1. Exames Laboratoriais (Hemograma, Lactato, Gasometrias, PCR, Bilirrubina, Renal, Hepático, Imagem...)"
                           >
                             <FlaskConical size={14} />
-                            <span>Exames</span>
+                            <span className="btn-responsive-text">Exames</span>
                             {c.organDysfunction?.lactateAbove2 && (
-                              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ef4444' }} />
+                              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#dc2626' }} />
                             )}
                           </button>
 
@@ -495,13 +495,13 @@ export default function Dashboard({
                           <button
                             type="button"
                             onClick={() => onOpenCultures && onOpenCultures(c)}
-                            className="btn btn-sm"
+                            className="btn btn-sm btn-responsive-compact"
                             style={{
                               padding: '5px 8px',
                               fontSize: '0.74rem',
-                              background: 'rgba(139, 92, 246, 0.15)',
-                              border: '1px solid rgba(139, 92, 246, 0.35)',
-                              color: '#c084fc',
+                              background: 'rgba(124, 58, 237, 0.1)',
+                              border: '1px solid rgba(124, 58, 237, 0.3)',
+                              color: '#7c3aed',
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: 4
@@ -509,9 +509,9 @@ export default function Dashboard({
                             title="2. Culturas & Antibiograma (Hemoculturas, Urocultura, TSA e Sensibilidade)"
                           >
                             <Microscope size={14} />
-                            <span>Culturas</span>
+                            <span className="btn-responsive-text">Culturas</span>
                             {c.telemetryAndExams?.isolatedPathogen && (
-                              <span style={{ fontSize: '0.65rem', padding: '1px 4px', borderRadius: 4, background: '#8b5cf6', color: '#fff' }}>+</span>
+                              <span style={{ fontSize: '0.65rem', padding: '1px 4px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>+</span>
                             )}
                           </button>
 
@@ -519,13 +519,13 @@ export default function Dashboard({
                           <button
                             type="button"
                             onClick={() => onOpenAntibioticsUsage && onOpenAntibioticsUsage(c)}
-                            className="btn btn-sm"
+                            className="btn btn-sm btn-responsive-compact"
                             style={{
                               padding: '5px 8px',
                               fontSize: '0.74rem',
-                              background: 'rgba(16, 185, 129, 0.15)',
-                              border: '1px solid rgba(16, 185, 129, 0.35)',
-                              color: '#34d399',
+                              background: 'rgba(5, 150, 105, 0.1)',
+                              border: '1px solid rgba(5, 150, 105, 0.3)',
+                              color: '#059669',
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: 4
@@ -533,20 +533,20 @@ export default function Dashboard({
                             title="3. Antibióticos Utilizados (Esquema Atual, Posologia, Dias de Uso e Modificações)"
                           >
                             <Pill size={14} />
-                            <span>ATB</span>
+                            <span className="btn-responsive-text">ATB</span>
                           </button>
 
                           {/* 4. Botão Sinais Vitais (Enfermagem) */}
                           <button
                             type="button"
                             onClick={() => onOpenVitalSigns && onOpenVitalSigns(c)}
-                            className="btn btn-sm"
+                            className="btn btn-sm btn-responsive-compact"
                             style={{
                               padding: '5px 8px',
                               fontSize: '0.74rem',
-                              background: 'rgba(239, 68, 68, 0.15)',
-                              border: '1px solid rgba(239, 68, 68, 0.35)',
-                              color: '#f87171',
+                              background: 'rgba(220, 38, 38, 0.1)',
+                              border: '1px solid rgba(220, 38, 38, 0.3)',
+                              color: '#dc2626',
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: 4
@@ -554,20 +554,20 @@ export default function Dashboard({
                             title="4. Evolução de Sinais Vitais (Enfermagem, PAM, FC, FR, Temp, SpO2, Glasgow, Diurese)"
                           >
                             <HeartPulse size={14} />
-                            <span>Sinais</span>
+                            <span className="btn-responsive-text">Sinais</span>
                           </button>
 
                           {/* 5. Botão Evolução Médica */}
                           <button
                             type="button"
                             onClick={() => onOpenMedicalEvolution && onOpenMedicalEvolution(c)}
-                            className="btn btn-sm"
+                            className="btn btn-sm btn-responsive-compact"
                             style={{
                               padding: '5px 8px',
                               fontSize: '0.74rem',
-                              background: 'rgba(56, 189, 248, 0.15)',
-                              border: '1px solid rgba(56, 189, 248, 0.35)',
-                              color: '#7dd3fc',
+                              background: 'rgba(2, 132, 199, 0.1)',
+                              border: '1px solid rgba(2, 132, 199, 0.3)',
+                              color: '#0284c7',
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: 4
@@ -575,20 +575,20 @@ export default function Dashboard({
                             title="5. Evolução Médica (Impressões Clínicas, Condutas e SOFA)"
                           >
                             <Stethoscope size={14} />
-                            <span>Evol. Médica</span>
+                            <span className="btn-responsive-text">Evol. Médica</span>
                           </button>
 
                           {/* 6. Botão Tendência de Exames / Estatísticas */}
                           <button
                             type="button"
                             onClick={() => onOpenLabTrends && onOpenLabTrends(c)}
-                            className="btn btn-sm"
+                            className="btn btn-sm btn-responsive-compact"
                             style={{
                               padding: '5px 8px',
                               fontSize: '0.74rem',
-                              background: 'rgba(245, 158, 11, 0.15)',
-                              border: '1px solid rgba(245, 158, 11, 0.35)',
-                              color: '#fbbf24',
+                              background: 'rgba(217, 119, 6, 0.1)',
+                              border: '1px solid rgba(217, 119, 6, 0.3)',
+                              color: '#d97706',
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: 4
@@ -596,20 +596,20 @@ export default function Dashboard({
                             title="6. Estatísticas & Tendência de Exames Laboratoriais (Curvas Cinéticas)"
                           >
                             <TrendingUp size={14} />
-                            <span>Tendência</span>
+                            <span className="btn-responsive-text">Tendência</span>
                           </button>
 
                           {/* 7. Botão Tabela CCIH */}
                           <button
                             type="button"
                             onClick={() => onOpenCcihEvolution && onOpenCcihEvolution(c)}
-                            className="btn btn-sm"
+                            className="btn btn-sm btn-responsive-compact"
                             style={{
                               padding: '5px 8px',
                               fontSize: '0.74rem',
-                              background: 'rgba(168, 85, 247, 0.15)',
-                              border: '1px solid rgba(168, 85, 247, 0.35)',
-                              color: '#d8b4fe',
+                              background: 'rgba(124, 58, 237, 0.1)',
+                              border: '1px solid rgba(124, 58, 237, 0.3)',
+                              color: '#7c3aed',
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: 4
@@ -617,7 +617,7 @@ export default function Dashboard({
                             title="7. Tabela de Evolução da CCIH (Pareceres, Precauções e Stewardship)"
                           >
                             <ShieldCheck size={14} />
-                            <span>CCIH</span>
+                            <span className="btn-responsive-text">CCIH</span>
                           </button>
 
                           {/* Botão de Pendências gerais da Golden Hour */}
