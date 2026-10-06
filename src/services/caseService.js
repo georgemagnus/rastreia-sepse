@@ -1,6 +1,7 @@
 import { INITIAL_CASES } from '../data/mockCases';
 import { db } from '../firebase/firebaseConfig';
 import { collection, getDocs, doc, setDoc, deleteDoc } from 'firebase/firestore';
+import { checkAntibiogramMismatch } from '../data/antibioticsGuide';
 
 const LOCAL_CASES_KEY = 'rastreia_sepse_cases_data';
 
@@ -37,6 +38,12 @@ export function calculateEvolution(caseData) {
 
 // Calculate pending clinical items for quick-view modal and dashboard icons
 export function checkCasePendencies(caseData) {
+  const mismatch = checkAntibiogramMismatch(
+    caseData.telemetryAndExams?.antibioticPrescribed,
+    caseData.telemetryAndExams?.isolatedPathogen,
+    caseData.telemetryAndExams?.antibiogramResistance || []
+  );
+
   const flags = {
     lactate: {
       status: caseData.telemetryAndExams?.lactateCollected ? 'ok' : 'pending',
@@ -52,6 +59,12 @@ export function checkCasePendencies(caseData) {
       value: caseData.telemetryAndExams?.antibioticPrescribed || '',
       label: caseData.telemetryAndExams?.antibioticPrescribed ? `ATB: ${caseData.telemetryAndExams.antibioticPrescribed}` : 'Antibiótico NÃO iniciado (Atenção Golden Hour!)'
     },
+    antibiogram: {
+      status: mismatch.hasMismatch ? 'mismatch' : 'ok',
+      hasMismatch: mismatch.hasMismatch,
+      details: mismatch.mismatchDetails,
+      label: mismatch.hasMismatch ? 'Incompatibilidade de Antibiograma!' : 'Antibiograma compatível'
+    },
     medicalEvaluation: {
       status: (caseData.medicalAssessment?.date && caseData.clinicalPresentation) ? 'ok' : 'pending',
       label: caseData.clinicalPresentation ? `Classificação: ${caseData.clinicalPresentation.toUpperCase()}` : 'Avaliação Médica / TRR pendente'
@@ -63,7 +76,7 @@ export function checkCasePendencies(caseData) {
   };
 
   const pendingCount = Object.values(flags).filter(f => f.status === 'pending').length;
-  return { flags, pendingCount };
+  return { flags, pendingCount, mismatch };
 }
 
 // Check count of SIRS criteria

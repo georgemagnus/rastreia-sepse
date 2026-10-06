@@ -13,7 +13,10 @@ import {
   ShieldCheck, 
   Menu, 
   X,
-  Stethoscope
+  Stethoscope,
+  BookOpen,
+  Pill,
+  ShieldAlert
 } from 'lucide-react';
 
 export default function Navbar({ 
@@ -24,7 +27,10 @@ export default function Navbar({
   onOpenLogin,
   isFirebaseConnected,
   deferredPrompt,
-  onInstallPwa
+  onInstallPwa,
+  onOpenProtocolDoc,
+  onOpenCrisisProtocols,
+  onOpenAntibioticGuide
 }) {
   const { currentUser, logout, demoUsers, loginAsDemo } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -95,6 +101,35 @@ export default function Navbar({
           >
             <BarChart3 size={18} />
             <span>Estatísticas & Indicadores</span>
+          </button>
+
+          <button 
+            className="btn btn-secondary"
+            onClick={onOpenProtocolDoc}
+            title="Acessar o documento oficial completo do Protocolo PTI.001.00"
+            style={{ color: 'var(--color-primary-light)' }}
+          >
+            <BookOpen size={16} />
+            <span className="hide-mobile">Protocolo PTI.001.00</span>
+          </button>
+
+          <button 
+            className="btn btn-outline-danger btn-sm"
+            onClick={() => onOpenCrisisProtocols && onOpenCrisisProtocols('hemodynamic')}
+            title="Condutas de Emergência: Choque, Falência Respiratória e Classificação KDIGO"
+          >
+            <ShieldAlert size={15} />
+            <span className="hide-mobile">Crise & KDIGO</span>
+          </button>
+
+          <button 
+            className="btn btn-secondary btn-sm"
+            onClick={() => onOpenAntibioticGuide && onOpenAntibioticGuide()}
+            title="Guia de Antimicrobianos e Checagem de Antibiograma"
+            style={{ color: '#10b981' }}
+          >
+            <Pill size={15} />
+            <span className="hide-mobile">Antibióticos</span>
           </button>
 
           <button 

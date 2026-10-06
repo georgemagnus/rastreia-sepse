@@ -81,6 +81,9 @@ export const INITIAL_CASES = [
       otherCulturesDateTime: "",
       antibioticPrescribed: "Ceftriaxona 2g EV + Claritromicina 500mg EV",
       antibioticDateTime: "2026-10-04T11:05", // Iniciado em 50 min (dentro de 1h)
+      isolatedPathogen: "Pseudomonas aeruginosa",
+      antibiogramResistance: ["Ceftriaxona"],
+      antibiogramNotes: "Hemocultura positiva para Pseudomonas aeruginosa com resistência intrínseca a Ceftriaxona (sensível a Cefepime e Meropenem).",
       nursingNotes: "Protocolo aberto prontamente após identificação de dispneia intensa e sonolência. Coletado par de hemoculturas antes do início da primeira dose do antimicrobiano.",
       nurseSignature: "Enf. Rodrigo Lima - COREN-PB 452.189"
     },

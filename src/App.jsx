@@ -10,6 +10,10 @@ import PrintFichaModal from './components/PrintFichaModal';
 import PendingDetailModal from './components/PendingDetailModal';
 import FirebaseConfigModal from './components/FirebaseConfigModal';
 import LoginModal from './components/LoginModal';
+import ProtocolDocumentModal from './components/ProtocolDocumentModal';
+import CrisisProtocolsModal from './components/CrisisProtocolsModal';
+import AntibioticGuideModal from './components/AntibioticGuideModal';
+import AntibioticDetailModal from './components/AntibioticDetailModal';
 
 function MainApp() {
   const [currentTab, setCurrentTab] = useState('dashboard');
@@ -28,6 +32,20 @@ function MainApp() {
 
   const [firebaseModalOpen, setFirebaseModalOpen] = useState(false);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+
+  // Novos Modais Institucionais
+  const [protocolDocModalOpen, setProtocolDocModalOpen] = useState(false);
+  
+  const [crisisModalOpen, setCrisisModalOpen] = useState(false);
+  const [crisisInitialTab, setCrisisInitialTab] = useState('hemodynamic');
+  const [crisisPatient, setCrisisPatient] = useState(null);
+
+  const [antibioticGuideModalOpen, setAntibioticGuideModalOpen] = useState(false);
+  const [antibioticInitialFocus, setAntibioticInitialFocus] = useState(null);
+  const [antibioticPatient, setAntibioticPatient] = useState(null);
+
+  const [drugDetailModalOpen, setDrugDetailModalOpen] = useState(false);
+  const [selectedDrugKey, setSelectedDrugKey] = useState('vancomicina');
 
   // PWA Install prompt handling
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -102,6 +120,39 @@ function MainApp() {
     setPendingModalOpen(true);
   };
 
+  // Handlers para os novos recursos
+  const handleOpenCrisisProtocols = (tab = 'hemodynamic', patient = null) => {
+    setCrisisInitialTab(tab);
+    setCrisisPatient(patient);
+    setCrisisModalOpen(true);
+  };
+
+  const handleOpenAntibioticGuide = (focus = null, patient = null) => {
+    setAntibioticInitialFocus(focus);
+    setAntibioticPatient(patient);
+    setAntibioticGuideModalOpen(true);
+  };
+
+  const handleOpenDrugDetail = (drugKey = 'vancomicina') => {
+    setSelectedDrugKey(drugKey);
+    setDrugDetailModalOpen(true);
+  };
+
+  const handleApplySchemeToActiveForm = (schemeText) => {
+    if (selectedCaseForEdit) {
+      const updated = {
+        ...selectedCaseForEdit,
+        telemetryAndExams: {
+          ...selectedCaseForEdit.telemetryAndExams,
+          antibioticPrescribed: schemeText
+        }
+      };
+      setSelectedCaseForEdit(updated);
+      handleSaveCase(updated);
+    }
+    setAntibioticGuideModalOpen(false);
+  };
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Navigation Header */}
@@ -115,6 +166,9 @@ function MainApp() {
           isFirebaseConnected={isFirebaseConnected}
           deferredPrompt={deferredPrompt}
           onInstallPwa={handleInstallPwa}
+          onOpenProtocolDoc={() => setProtocolDocModalOpen(true)}
+          onOpenCrisisProtocols={handleOpenCrisisProtocols}
+          onOpenAntibioticGuide={handleOpenAntibioticGuide}
         />
       </div>
 
@@ -128,6 +182,10 @@ function MainApp() {
             onPrintCase={handleOpenPrint}
             onDeleteCase={handleDeleteCase}
             onOpenPendencies={handleOpenPendencies}
+            onOpenProtocolDoc={() => setProtocolDocModalOpen(true)}
+            onOpenCrisisProtocols={handleOpenCrisisProtocols}
+            onOpenAntibioticGuide={handleOpenAntibioticGuide}
+            onOpenDrugDetail={handleOpenDrugDetail}
           />
         ) : (
           <StatisticsView cases={cases} />
@@ -146,7 +204,7 @@ function MainApp() {
       }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 10 }}>
           <div>
-            <strong>Rastreia Sepse</strong> • Ficha de Triagem Protocolo Adulto (FCH.INS.001.01)
+            <strong>Rastreia Sepse</strong> • Protocolo de Gerenciamento de Sepse (PTI.001.00 - Rev. 01)
           </div>
           <div>
             Complexo de Doenças Infectocontagiosas Dr. Clementino Fraga • Governo da Paraíba
@@ -160,6 +218,9 @@ function MainApp() {
         onClose={() => setFormModalOpen(false)}
         initialData={selectedCaseForEdit}
         onSave={handleSaveCase}
+        onOpenCrisisProtocols={handleOpenCrisisProtocols}
+        onOpenAntibioticGuide={handleOpenAntibioticGuide}
+        onOpenDrugDetail={handleOpenDrugDetail}
       />
 
       {/* Official Print/PDF Modal */}
@@ -189,6 +250,37 @@ function MainApp() {
       <LoginModal 
         isOpen={loginModalOpen}
         onClose={() => setLoginModalOpen(false)}
+      />
+
+      {/* Modal 1: Leitor do Documento Oficial PTI.001.00 */}
+      <ProtocolDocumentModal 
+        isOpen={protocolDocModalOpen}
+        onClose={() => setProtocolDocModalOpen(false)}
+      />
+
+      {/* Modal 2: Condutas em Situações de Crise & KDIGO */}
+      <CrisisProtocolsModal 
+        isOpen={crisisModalOpen}
+        onClose={() => setCrisisModalOpen(false)}
+        initialTab={crisisInitialTab}
+        currentPatient={crisisPatient}
+      />
+
+      {/* Modal 3: Guia de Antibióticos & Antibiograma */}
+      <AntibioticGuideModal 
+        isOpen={antibioticGuideModalOpen}
+        onClose={() => setAntibioticGuideModalOpen(false)}
+        onSelectDrugForDetail={handleOpenDrugDetail}
+        onApplySchemeToPatient={handleApplySchemeToActiveForm}
+        initialFocus={antibioticInitialFocus}
+        currentPatient={antibioticPatient}
+      />
+
+      {/* Modal 4: Bula Técnica Detalhada do Fármaco */}
+      <AntibioticDetailModal 
+        isOpen={drugDetailModalOpen}
+        onClose={() => setDrugDetailModalOpen(false)}
+        drugKey={selectedDrugKey}
       />
     </div>
   );

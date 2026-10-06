@@ -15,11 +15,24 @@ import {
   Activity,
   HeartPulse,
   Syringe,
-  Info
+  Info,
+  Pill,
+  Wind,
+  Droplet,
+  Sparkles
 } from 'lucide-react';
 import { countSirsCriteria, countOrganDysfunctions, calculateVolume } from '../services/caseService';
+import { checkAntibiogramMismatch } from '../data/antibioticsGuide';
 
-export default function SepsisFormModal({ isOpen, onClose, initialData, onSave }) {
+export default function SepsisFormModal({ 
+  isOpen, 
+  onClose, 
+  initialData, 
+  onSave,
+  onOpenCrisisProtocols,
+  onOpenAntibioticGuide,
+  onOpenDrugDetail
+}) {
   const { currentUser } = useAuth();
   const [activeTab, setActiveTab] = useState('patient'); // 'patient' | 'nursing' | 'doctor' | 'sciras'
 
@@ -264,37 +277,101 @@ export default function SepsisFormModal({ isOpen, onClose, initialData, onSave }
           </div>
         </div>
 
-        {/* Dynamic Warning Alert Bar */}
-        <div style={{
-          padding: '8px 20px',
-          background: odCount > 0 ? 'rgba(239, 68, 68, 0.15)' : sirsCount >= 2 ? 'rgba(245, 158, 11, 0.15)' : 'var(--color-surface)',
-          borderBottom: '1px solid var(--color-surface-border)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          fontSize: '0.82rem',
-          flexWrap: 'wrap',
-          gap: 10
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {odCount > 0 ? (
-              <span className="badge badge-danger">
-                <AlertTriangle size={13} /> {odCount} DISFUNÇÃO(ÕES) ORGÂNICA(S) DETECTADA(S) - RISCO CRÍTICO
-              </span>
-            ) : sirsCount >= 2 ? (
-              <span className="badge badge-warning">
-                <AlertTriangle size={13} /> {sirsCount} CRITÉRIOS DE SIRS - TRIAGEM POSITIVA
-              </span>
-            ) : (
-              <span className="badge badge-neutral">
-                <Info size={13} /> Triagem Inicial em Andamento
-              </span>
-            )}
-          </div>
-          <div style={{ color: 'var(--color-text-muted)', fontSize: '0.78rem' }}>
-            {formData.patientName ? `Paciente: ${formData.patientName}` : 'Paciente sem identificação'}
-          </div>
-        </div>
+        {/* Dynamic Warning Alert Bar with Crisis Links */}
+        {(() => {
+          const antibiogramCheck = checkAntibiogramMismatch(
+            formData.telemetryAndExams?.antibioticPrescribed,
+            formData.telemetryAndExams?.isolatedPathogen,
+            formData.telemetryAndExams?.antibiogramResistance || []
+          );
+
+          return (
+            <div style={{
+              padding: '10px 20px',
+              background: (odCount > 0 || antibiogramCheck.hasMismatch) ? 'rgba(239, 68, 68, 0.15)' : sirsCount >= 2 ? 'rgba(245, 158, 11, 0.15)' : 'var(--color-surface)',
+              borderBottom: '1px solid var(--color-surface-border)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              fontSize: '0.82rem',
+              flexWrap: 'wrap',
+              gap: 10
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                {antibiogramCheck.hasMismatch && (
+                  <span className="badge badge-danger">
+                    <AlertTriangle size={13} /> ANTIBIOGRAMA INCOMPATÍVEL!
+                  </span>
+                )}
+                {odCount > 0 ? (
+                  <span className="badge badge-danger">
+                    <AlertTriangle size={13} /> {odCount} DISFUNÇÃO(ÕES) ORGÂNICA(S) - SEPSE
+                  </span>
+                ) : sirsCount >= 2 ? (
+                  <span className="badge badge-warning">
+                    <AlertTriangle size={13} /> {sirsCount} CRITÉRIOS DE SIRS - TRIAGEM POSITIVA
+                  </span>
+                ) : (
+                  <span className="badge badge-neutral">
+                    <Info size={13} /> Triagem Inicial em Andamento
+                  </span>
+                )}
+
+                {/* Quick Action Buttons to Crisis and Antibiotic Protocols */}
+                {(odCount > 0 || sirsCount >= 2 || antibiogramCheck.hasMismatch) && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap', marginLeft: 6 }}>
+                    <button 
+                      type="button" 
+                      className="btn btn-outline-danger btn-sm"
+                      onClick={() => onOpenCrisisProtocols && onOpenCrisisProtocols('hemodynamic', formData)}
+                      style={{ padding: '3px 8px', fontSize: '0.72rem' }}
+                      title="Protocolo de Colapso Hemodinâmico e Choque"
+                    >
+                      <HeartPulse size={13} />
+                      <span>Colapso Hemodinâmico</span>
+                    </button>
+
+                    <button 
+                      type="button" 
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => onOpenCrisisProtocols && onOpenCrisisProtocols('respiratory', formData)}
+                      style={{ padding: '3px 8px', fontSize: '0.72rem', color: '#38bdf8' }}
+                      title="Protocolo de Insuficiência Respiratória e SDRA"
+                    >
+                      <Wind size={13} />
+                      <span>Insuf. Respiratória</span>
+                    </button>
+
+                    <button 
+                      type="button" 
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => onOpenCrisisProtocols && onOpenCrisisProtocols('renal', formData)}
+                      style={{ padding: '3px 8px', fontSize: '0.72rem', color: '#fbbf24' }}
+                      title="Classificar Lesão Renal Aguda no KDIGO"
+                    >
+                      <Droplet size={13} />
+                      <span>Classificar KDIGO</span>
+                    </button>
+
+                    <button 
+                      type="button" 
+                      className="btn btn-secondary btn-sm"
+                      onClick={() => onOpenAntibioticGuide && onOpenAntibioticGuide(null, formData)}
+                      style={{ padding: '3px 8px', fontSize: '0.72rem', color: '#10b981' }}
+                      title="Consultar Guia e Sugestão de Antimicrobianos do Protocolo PTI.001.00"
+                    >
+                      <Pill size={13} />
+                      <span>Guia PTI.001.00</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+              <div style={{ color: 'var(--color-text-muted)', fontSize: '0.78rem' }}>
+                {formData.patientName ? `Paciente: ${formData.patientName}` : 'Paciente sem identificação'}
+              </div>
+            </div>
+          );
+        })()}
 
         {/* Tab Navigation (Touch-friendly and Desktop responsive) */}
         <div style={{
@@ -1191,21 +1268,49 @@ export default function SepsisFormModal({ isOpen, onClose, initialData, onSave }
                     </div>
                   </div>
 
-                  {/* ANTIBIÓTICO (Golden Hour) */}
+                  {/* ANTIBIÓTICO (Golden Hour) & GUIA PTI.001.00 */}
                   <div style={{
-                    padding: 14,
+                    padding: 16,
                     background: 'var(--color-surface)',
                     borderRadius: 'var(--radius-md)',
                     border: '1px solid var(--color-warning-border)',
                     gridColumn: 'span 2'
                   }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                      <Syringe size={18} color="#f59e0b" />
-                      <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#fbbf24' }}>
-                        ANTIBIÓTICO (Meta: Infusão na 1ª Hora)
-                      </span>
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 10, flexWrap: 'wrap', gap: 8 }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                        <Syringe size={18} color="#f59e0b" />
+                        <span style={{ fontWeight: 700, fontSize: '0.9rem', color: '#fbbf24' }}>
+                          ANTIBIÓTICO (Meta: Infusão na 1ª Hora)
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
+                        <button
+                          type="button"
+                          className="btn btn-primary btn-sm"
+                          style={{ fontSize: '0.74rem', padding: '4px 10px' }}
+                          onClick={() => onOpenAntibioticGuide && onOpenAntibioticGuide(null, formData)}
+                        >
+                          <Pill size={13} />
+                          <span>Sugerir Esquema PTI.001.00 por Foco</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-sm"
+                          style={{ fontSize: '0.74rem', padding: '4px 10px' }}
+                          onClick={() => {
+                            const firstWord = (formData.telemetryAndExams.antibioticPrescribed || '').split(' ')[0].toLowerCase();
+                            if (onOpenDrugDetail) onOpenDrugDetail(firstWord || 'ceftriaxona');
+                          }}
+                        >
+                          <FileText size={13} color="var(--color-primary-light)" />
+                          <span>Ver Bula do Fármaco</span>
+                        </button>
+                      </div>
                     </div>
-                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 10 }}>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 10, marginBottom: 12 }}>
                       <div>
                         <label className="form-label">Qual antimicrobiano prescrito/administrado?</label>
                         <input 
@@ -1223,7 +1328,7 @@ export default function SepsisFormModal({ isOpen, onClose, initialData, onSave }
                         <label className="form-label">Data e Hora do Início</label>
                         <input 
                           type="datetime-local" 
-                          className="form-input"
+                          className="form-input" 
                           value={formData.telemetryAndExams.antibioticDateTime}
                           onChange={(e) => setFormData({
                             ...formData,
@@ -1231,6 +1336,85 @@ export default function SepsisFormModal({ isOpen, onClose, initialData, onSave }
                           })}
                         />
                       </div>
+                    </div>
+
+                    {/* MICROBIOLOGIA & ANTIBIOGRAMA */}
+                    <div style={{
+                      padding: 12,
+                      background: 'var(--color-surface-subtle)',
+                      borderRadius: 'var(--radius-sm)',
+                      border: '1px solid var(--color-surface-border)'
+                    }}>
+                      <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--color-primary-light)', marginBottom: 8, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <FlaskConical size={14} />
+                        <span>Microbiologia & Antibiograma do Paciente:</span>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+                        <div>
+                          <label className="form-label">Patógeno Isolado (Cultura)</label>
+                          <input 
+                            type="text" 
+                            className="form-input"
+                            placeholder="Ex: Pseudomonas aeruginosa, MRSA, KPC..."
+                            value={formData.telemetryAndExams.isolatedPathogen || ''}
+                            onChange={(e) => setFormData({
+                              ...formData,
+                              telemetryAndExams: { ...formData.telemetryAndExams, isolatedPathogen: e.target.value }
+                            })}
+                          />
+                        </div>
+
+                        <div>
+                          <label className="form-label">Resistências Registradas no Antibiograma</label>
+                          <input 
+                            type="text" 
+                            className="form-input"
+                            placeholder="Ex: Ceftriaxona, Oxacilina, Carbapenêmicos..."
+                            value={(formData.telemetryAndExams.antibiogramResistance || []).join(', ')}
+                            onChange={(e) => setFormData({
+                              ...formData,
+                              telemetryAndExams: { 
+                                ...formData.telemetryAndExams, 
+                                antibiogramResistance: e.target.value.split(',').map(s => s.trim()).filter(Boolean) 
+                              }
+                            })}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Verificação Imediata de Incompatibilidade de Antibiograma */}
+                      {(() => {
+                        const mismatchCheck = checkAntibiogramMismatch(
+                          formData.telemetryAndExams?.antibioticPrescribed,
+                          formData.telemetryAndExams?.isolatedPathogen,
+                          formData.telemetryAndExams?.antibiogramResistance || []
+                        );
+
+                        if (mismatchCheck.hasMismatch) {
+                          return (
+                            <div style={{
+                              marginTop: 10,
+                              padding: 12,
+                              borderRadius: 'var(--radius-sm)',
+                              background: 'rgba(239, 68, 68, 0.18)',
+                              border: '1px solid #ef4444'
+                            }}>
+                              <div style={{ color: '#f87171', fontWeight: 800, fontSize: '0.86rem', display: 'flex', alignItems: 'center', gap: 6 }}>
+                                <AlertTriangle size={16} />
+                                <span>ALERTA CRÍTICO: ANTIBIOGRAMA INCOMPATÍVEL COM ESQUEMA EM USO!</span>
+                              </div>
+                              <div style={{ fontSize: '0.8rem', color: 'var(--color-text-main)', marginTop: 4 }}>
+                                {mismatchCheck.mismatchDetails.reason}
+                              </div>
+                              <div style={{ fontSize: '0.8rem', color: '#fca5a5', marginTop: 4, fontWeight: 600 }}>
+                                💡 Conduta: {mismatchCheck.mismatchDetails.recommendation}
+                              </div>
+                            </div>
+                          );
+                        }
+                        return null;
+                      })()}
                     </div>
                   </div>
 

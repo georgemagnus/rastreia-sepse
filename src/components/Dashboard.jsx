@@ -21,7 +21,11 @@ import {
   TrendingUp, 
   Activity, 
   UserCheck,
-  HeartPulse
+  HeartPulse,
+  BookOpen,
+  Pill,
+  Wind,
+  ShieldAlert
 } from 'lucide-react';
 import { calculateEvolution, checkCasePendencies } from '../services/caseService';
 
@@ -31,7 +35,11 @@ export default function Dashboard({
   onEditCase, 
   onPrintCase, 
   onDeleteCase,
-  onOpenPendencies
+  onOpenPendencies,
+  onOpenProtocolDoc,
+  onOpenCrisisProtocols,
+  onOpenAntibioticGuide,
+  onOpenDrugDetail
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
@@ -64,7 +72,7 @@ export default function Dashboard({
   return (
     <div style={{ maxWidth: 1400, margin: '0 auto', padding: '24px 20px' }}>
       
-      {/* Institutional Banner & Quick Action */}
+      {/* Institutional Banner & Top Action Buttons */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
@@ -74,27 +82,62 @@ export default function Dashboard({
         marginBottom: 24
       }}>
         <div>
-          <h1 style={{ fontSize: '1.6rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--color-text-main)' }}>
-            Monitoramento de Sepse Beira-Leito
-          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span className="badge badge-info">PTI.001.00</span>
+            <h1 style={{ fontSize: '1.6rem', fontWeight: 800, letterSpacing: '-0.02em', color: 'var(--color-text-main)' }}>
+              Monitoramento de Sepse Beira-Leito
+            </h1>
+          </div>
           <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', marginTop: 2 }}>
             Protocolo Institucional de Triagem Rápida, Bundles de Sobrevivência e Auditoria SCIRAS
           </p>
         </div>
 
-        <button 
-          className="btn"
-          style={{ 
-            background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
-            color: '#fff',
-            padding: '12px 20px',
-            boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)' 
-          }}
-          onClick={onNewCase}
-        >
-          <PlusCircle size={20} />
-          <span>Abrir Novo Protocolo de Sepse</span>
-        </button>
+        {/* Action Buttons Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+          <button 
+            className="btn btn-secondary"
+            onClick={onOpenProtocolDoc}
+            title="Acessar o documento oficial completo do Protocolo PTI.001.00"
+            style={{ borderColor: 'var(--color-primary-light)', color: 'var(--color-primary-light)' }}
+          >
+            <BookOpen size={17} />
+            <span>Documento PTI.001.00</span>
+          </button>
+
+          <button 
+            className="btn btn-outline-danger"
+            onClick={() => onOpenCrisisProtocols && onOpenCrisisProtocols('hemodynamic')}
+            title="Condutas de Emergência: Choque, Falência Respiratória e Classificação KDIGO"
+          >
+            <ShieldAlert size={17} />
+            <span>Condutas de Crise & KDIGO</span>
+          </button>
+
+          <button 
+            className="btn btn-secondary"
+            onClick={() => onOpenAntibioticGuide && onOpenAntibioticGuide()}
+            title="Guia oficial de escolha empírica e bulas de antimicrobianos do CHCF"
+            style={{ color: '#10b981', borderColor: 'rgba(16, 185, 129, 0.4)' }}
+          >
+            <Pill size={17} />
+            <span>Guia Antibióticos & Antibiograma</span>
+          </button>
+
+          <button 
+            className="btn"
+            style={{ 
+              background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
+              color: '#fff',
+              padding: '10px 18px',
+              boxShadow: '0 4px 14px rgba(16, 185, 129, 0.35)' 
+            }}
+            onClick={onNewCase}
+          >
+            <PlusCircle size={18} />
+            <span>Abrir Protocolo</span>
+          </button>
+        </div>
       </div>
 
       {/* KPI Cards */}
@@ -273,15 +316,15 @@ export default function Dashboard({
                   <th style={{ padding: '14px 18px', fontWeight: 700 }}>Paciente & Localização</th>
                   <th style={{ padding: '14px 18px', fontWeight: 700 }}>Abertura Protocolo</th>
                   <th style={{ padding: '14px 18px', fontWeight: 700 }}>Evolução</th>
-                  <th style={{ padding: '14px 18px', fontWeight: 700 }}>Classificação</th>
-                  <th style={{ padding: '14px 18px', fontWeight: 700 }}>Pendências & Bundle 1h</th>
+                  <th style={{ padding: '14px 18px', fontWeight: 700 }}>Classificação & Crise</th>
+                  <th style={{ padding: '14px 18px', fontWeight: 700 }}>Pendências & Antibiograma</th>
                   <th style={{ padding: '14px 18px', fontWeight: 700, textAlign: 'right' }}>Ações</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredCases.map((c) => {
                   const evolution = calculateEvolution(c);
-                  const { flags, pendingCount } = checkCasePendencies(c);
+                  const { flags, pendingCount, mismatch } = checkCasePendencies(c);
 
                   return (
                     <tr 
@@ -343,16 +386,32 @@ export default function Dashboard({
                         </div>
                       </td>
 
-                      {/* Classificação Clínica */}
+                      {/* Classificação Clínica & Link para Crise */}
                       <td style={{ padding: '14px 18px', whiteSpace: 'nowrap' }}>
-                        {c.status === 'choque_septico' ? (
-                          <span className="badge badge-danger">CHOQUE SÉPTICO</span>
-                        ) : c.status === 'sepse' ? (
-                          <span className="badge badge-info">SEPSE CONFIRMADA</span>
-                        ) : c.status === 'afastado' ? (
-                          <span className="badge badge-neutral">QUADRO AFASTADO</span>
-                        ) : (
-                          <span className="badge badge-warning">EM INVESTIGAÇÃO</span>
+                        <div>
+                          {c.status === 'choque_septico' ? (
+                            <span className="badge badge-danger">CHOQUE SÉPTICO</span>
+                          ) : c.status === 'sepse' ? (
+                            <span className="badge badge-info">SEPSE CONFIRMADA</span>
+                          ) : c.status === 'afastado' ? (
+                            <span className="badge badge-neutral">QUADRO AFASTADO</span>
+                          ) : (
+                            <span className="badge badge-warning">EM INVESTIGAÇÃO</span>
+                          )}
+                        </div>
+
+                        {/* Botão direto para Crise/KDIGO se o paciente estiver grave */}
+                        {(c.status === 'choque_septico' || c.status === 'sepse') && (
+                          <button
+                            type="button"
+                            onClick={() => onOpenCrisisProtocols && onOpenCrisisProtocols('hemodynamic', c)}
+                            className="btn btn-outline-danger btn-sm"
+                            style={{ padding: '2px 8px', fontSize: '0.7rem', marginTop: 4, display: 'inline-flex', alignItems: 'center', gap: 4 }}
+                            title="Acessar condutas de colapso hemodinâmico, ventilação e KDIGO para este paciente"
+                          >
+                            <ShieldAlert size={12} />
+                            <span>Condutas Crise & KDIGO</span>
+                          </button>
                         )}
 
                         {c.sciras?.specificFocus && (
@@ -362,7 +421,7 @@ export default function Dashboard({
                         )}
                       </td>
 
-                      {/* Pendências e Informações Importantes (Ícones Interativos) */}
+                      {/* Pendências, Bundle 1h & Antibiograma */}
                       <td style={{ padding: '14px 18px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                           
@@ -372,21 +431,18 @@ export default function Dashboard({
                             onClick={() => onOpenPendencies(c)}
                             title={flags.lactate.label}
                             style={{
-                              width: 32,
-                              height: 32,
+                              width: 30,
+                              height: 30,
                               borderRadius: 'var(--radius-sm)',
                               background: flags.lactate.status === 'ok' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
                               border: `1px solid ${flags.lactate.status === 'ok' ? '#10b981' : '#ef4444'}`,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              cursor: 'pointer',
-                              transition: 'transform 0.15s'
+                              cursor: 'pointer'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                           >
-                            <Droplet size={16} color={flags.lactate.status === 'ok' ? '#10b981' : '#ef4444'} />
+                            <Droplet size={15} color={flags.lactate.status === 'ok' ? '#10b981' : '#ef4444'} />
                           </button>
 
                           {/* Ícone 2: Hemoculturas antes do ATB */}
@@ -395,21 +451,18 @@ export default function Dashboard({
                             onClick={() => onOpenPendencies(c)}
                             title={flags.cultures.label}
                             style={{
-                              width: 32,
-                              height: 32,
+                              width: 30,
+                              height: 30,
                               borderRadius: 'var(--radius-sm)',
                               background: flags.cultures.status === 'ok' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
                               border: `1px solid ${flags.cultures.status === 'ok' ? '#10b981' : '#f59e0b'}`,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              cursor: 'pointer',
-                              transition: 'transform 0.15s'
+                              cursor: 'pointer'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                           >
-                            <FlaskConical size={16} color={flags.cultures.status === 'ok' ? '#10b981' : '#f59e0b'} />
+                            <FlaskConical size={15} color={flags.cultures.status === 'ok' ? '#10b981' : '#f59e0b'} />
                           </button>
 
                           {/* Ícone 3: Antibiótico 1ª Hora */}
@@ -418,21 +471,18 @@ export default function Dashboard({
                             onClick={() => onOpenPendencies(c)}
                             title={flags.antibiotic.label}
                             style={{
-                              width: 32,
-                              height: 32,
+                              width: 30,
+                              height: 30,
                               borderRadius: 'var(--radius-sm)',
                               background: flags.antibiotic.status === 'ok' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
                               border: `1px solid ${flags.antibiotic.status === 'ok' ? '#10b981' : '#ef4444'}`,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              cursor: 'pointer',
-                              transition: 'transform 0.15s'
+                              cursor: 'pointer'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                           >
-                            <Syringe size={16} color={flags.antibiotic.status === 'ok' ? '#10b981' : '#ef4444'} />
+                            <Syringe size={15} color={flags.antibiotic.status === 'ok' ? '#10b981' : '#ef4444'} />
                           </button>
 
                           {/* Ícone 4: Avaliação Médica */}
@@ -441,21 +491,18 @@ export default function Dashboard({
                             onClick={() => onOpenPendencies(c)}
                             title={flags.medicalEvaluation.label}
                             style={{
-                              width: 32,
-                              height: 32,
+                              width: 30,
+                              height: 30,
                               borderRadius: 'var(--radius-sm)',
                               background: flags.medicalEvaluation.status === 'ok' ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)',
                               border: `1px solid ${flags.medicalEvaluation.status === 'ok' ? '#38bdf8' : '#f59e0b'}`,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              cursor: 'pointer',
-                              transition: 'transform 0.15s'
+                              cursor: 'pointer'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                           >
-                            <Stethoscope size={16} color={flags.medicalEvaluation.status === 'ok' ? '#38bdf8' : '#f59e0b'} />
+                            <Stethoscope size={15} color={flags.medicalEvaluation.status === 'ok' ? '#38bdf8' : '#f59e0b'} />
                           </button>
 
                           {/* Ícone 5: SCIRAS */}
@@ -464,21 +511,18 @@ export default function Dashboard({
                             onClick={() => onOpenPendencies(c)}
                             title={flags.sciras.label}
                             style={{
-                              width: 32,
-                              height: 32,
+                              width: 30,
+                              height: 30,
                               borderRadius: 'var(--radius-sm)',
                               background: flags.sciras.status === 'ok' ? 'rgba(139, 92, 246, 0.15)' : 'rgba(100, 116, 139, 0.15)',
                               border: `1px solid ${flags.sciras.status === 'ok' ? '#a855f7' : '#64748b'}`,
                               display: 'flex',
                               alignItems: 'center',
                               justifyContent: 'center',
-                              cursor: 'pointer',
-                              transition: 'transform 0.15s'
+                              cursor: 'pointer'
                             }}
-                            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
-                            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
                           >
-                            <ShieldCheck size={16} color={flags.sciras.status === 'ok' ? '#a855f7' : '#94a3b8'} />
+                            <ShieldCheck size={15} color={flags.sciras.status === 'ok' ? '#a855f7' : '#94a3b8'} />
                           </button>
 
                           {pendingCount > 0 && (
@@ -490,13 +534,37 @@ export default function Dashboard({
                                 color: '#fbbf24',
                                 fontWeight: 700,
                                 textDecoration: 'underline',
-                                marginLeft: 4
+                                marginLeft: 2
                               }}
                             >
-                              {pendingCount} pendência(s)
+                              {pendingCount} pendente(s)
                             </button>
                           )}
                         </div>
+
+                        {/* ALERTA DE ANTIBIOGRAMA INCOMPATÍVEL */}
+                        {mismatch?.hasMismatch && (
+                          <div style={{ marginTop: 6 }}>
+                            <button
+                              type="button"
+                              className="badge badge-danger"
+                              onClick={() => onOpenAntibioticGuide && onOpenAntibioticGuide(c.sciras?.specificFocus, c)}
+                              style={{ 
+                                cursor: 'pointer', 
+                                border: '1px solid #ef4444', 
+                                fontSize: '0.7rem', 
+                                padding: '3px 8px',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 4
+                              }}
+                              title={mismatch.mismatchDetails?.reason}
+                            >
+                              <AlertTriangle size={12} />
+                              <span>Antibiograma Incompatível! ({mismatch.mismatchDetails?.pathogen?.split(' ')[0]})</span>
+                            </button>
+                          </div>
+                        )}
                       </td>
 
                       {/* Botões de Ação */}
