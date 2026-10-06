@@ -28,7 +28,9 @@ import {
   ShieldAlert,
   Microscope,
   FileText,
-  ClipboardList
+  ClipboardList,
+  Check,
+  X
 } from 'lucide-react';
 import { calculateEvolution, checkCasePendencies } from '../services/caseService';
 import { getCaseCriticalAlerts } from './ClinicalAlertModal';
@@ -686,10 +688,17 @@ export default function Dashboard({
                             className="btn btn-secondary btn-sm"
                             onClick={() => onEditCase(c)}
                             title="Editar protocolo do paciente"
-                            style={{ padding: '6px 10px' }}
+                            style={{ 
+                              width: 32, 
+                              height: 32, 
+                              padding: 0, 
+                              display: 'inline-flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center',
+                              borderRadius: 'var(--radius-sm)'
+                            }}
                           >
                             <Edit3 size={15} />
-                            <span className="hide-mobile">Editar</span>
                           </button>
 
                           {/* Impressão de Relatório Oficial */}
@@ -697,10 +706,18 @@ export default function Dashboard({
                             className="btn btn-secondary btn-sm"
                             onClick={() => onPrintCase(c)}
                             title="Imprimir Ficha Oficial Clementino Fraga (PDF)"
-                            style={{ padding: '6px 10px', color: 'var(--color-primary-light)' }}
+                            style={{ 
+                              width: 32, 
+                              height: 32, 
+                              padding: 0, 
+                              display: 'inline-flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'center',
+                              color: 'var(--color-primary-light)',
+                              borderRadius: 'var(--radius-sm)'
+                            }}
                           >
                             <Printer size={15} />
-                            <span className="hide-mobile">Ficha Oficial</span>
                           </button>
 
                           {/* Exclusão do Protocolo */}
@@ -709,16 +726,34 @@ export default function Dashboard({
                               <button 
                                 className="btn btn-danger btn-sm"
                                 onClick={() => { onDeleteCase(c.id); setDeleteConfirmId(null); }}
-                                style={{ padding: '4px 8px', fontSize: '0.72rem' }}
+                                title="Confirmar exclusão definitiva"
+                                style={{ 
+                                  width: 32, 
+                                  height: 32, 
+                                  padding: 0, 
+                                  display: 'inline-flex', 
+                                  alignItems: 'center', 
+                                  justifyContent: 'center',
+                                  borderRadius: 'var(--radius-sm)'
+                                }}
                               >
-                                Confirmar
+                                <Check size={14} />
                               </button>
                               <button 
                                 className="btn btn-secondary btn-sm"
                                 onClick={() => setDeleteConfirmId(null)}
-                                style={{ padding: '4px 8px', fontSize: '0.72rem' }}
+                                title="Cancelar exclusão"
+                                style={{ 
+                                  width: 32, 
+                                  height: 32, 
+                                  padding: 0, 
+                                  display: 'inline-flex', 
+                                  alignItems: 'center', 
+                                  justifyContent: 'center',
+                                  borderRadius: 'var(--radius-sm)'
+                                }}
                               >
-                                X
+                                <X size={14} />
                               </button>
                             </div>
                           ) : (
@@ -726,7 +761,15 @@ export default function Dashboard({
                               className="btn btn-outline-danger btn-sm"
                               onClick={() => setDeleteConfirmId(c.id)}
                               title="Excluir protocolo"
-                              style={{ padding: '6px 8px' }}
+                              style={{ 
+                                width: 32, 
+                                height: 32, 
+                                padding: 0, 
+                                display: 'inline-flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'center',
+                                borderRadius: 'var(--radius-sm)'
+                              }}
                             >
                               <Trash2 size={15} />
                             </button>
