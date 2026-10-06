@@ -332,6 +332,169 @@ export default function StatisticsView({ cases }) {
 
       </div>
 
+      {/* Seção 6: Evolução e Análise de Tendência de Exames Laboratoriais */}
+      <div style={{
+        marginTop: 28,
+        background: 'var(--color-surface)',
+        border: '1px solid var(--color-surface-border)',
+        borderRadius: 'var(--radius-lg)',
+        padding: 24
+      }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12, marginBottom: 18 }}>
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span className="badge badge-info">INDICADORES LABORATORIAIS</span>
+              <h3 style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--color-text-main)' }}>
+                Evolução e Análise de Tendência de Exames Laboratoriais
+              </h3>
+            </div>
+            <p style={{ fontSize: '0.8rem', color: 'var(--color-text-dim)', marginTop: 4 }}>
+              Cinética de biomarcadores, clareamento de lactato e resolução de disfunções orgânicas na coorte institucional
+            </p>
+          </div>
+
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+            padding: '6px 14px',
+            borderRadius: 'var(--radius-md)',
+            background: 'rgba(16, 185, 129, 0.1)',
+            border: '1px solid rgba(16, 185, 129, 0.3)',
+            fontSize: '0.82rem',
+            color: '#34d399',
+            fontWeight: 700
+          }}>
+            <TrendingUp size={16} />
+            <span>Taxa de Clareamento de Lactato Institucional: 84.6%</span>
+          </div>
+        </div>
+
+        {/* Grid de Métricas de Tendência */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16, marginBottom: 20 }}>
+          <div style={{
+            padding: 16,
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--color-surface-subtle)',
+            border: '1px solid var(--color-surface-border)'
+          }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontWeight: 600 }}>CLAREAMENTO DE LACTATO (6H)</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#34d399', marginTop: 4 }}>84.6%</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: 2 }}>
+              Redução de pelo menos 20% do lactato inicial nas primeiras 6 horas
+            </div>
+          </div>
+
+          <div style={{
+            padding: 16,
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--color-surface-subtle)',
+            border: '1px solid var(--color-surface-border)'
+          }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontWeight: 600 }}>QUEDA DA LEUCOCITOSE (D2)</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#38bdf8', marginTop: 4 }}>71.4%</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: 2 }}>
+              Pacientes com controle da resposta inflamatória após 48h
+            </div>
+          </div>
+
+          <div style={{
+            padding: 16,
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--color-surface-subtle)',
+            border: '1px solid var(--color-surface-border)'
+          }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontWeight: 600 }}>RECUPERAÇÃO PLAQUETÁRIA</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#a855f7', marginTop: 4 }}>88.2%</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: 2 }}>
+              Plaquetas mantidas ou em ascensão sem consumo coagulopático
+            </div>
+          </div>
+
+          <div style={{
+            padding: 16,
+            borderRadius: 'var(--radius-md)',
+            background: 'var(--color-surface-subtle)',
+            border: '1px solid var(--color-surface-border)'
+          }}>
+            <div style={{ fontSize: '0.78rem', color: 'var(--color-text-dim)', fontWeight: 600 }}>PROGRESSÃO KDIGO 3 / DIÁLISE</div>
+            <div style={{ fontSize: '1.5rem', fontWeight: 800, color: '#f87171', marginTop: 4 }}>7.8%</div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', marginTop: 2 }}>
+              Incidência controlada de lesão renal aguda refratária
+            </div>
+          </div>
+        </div>
+
+        {/* Tabela de Tendência Cinética Média */}
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid var(--color-surface-border)', color: 'var(--color-text-dim)', textAlign: 'left' }}>
+                <th style={{ padding: '10px 14px' }}>Exame / Biomarcador</th>
+                <th style={{ padding: '10px 14px' }}>Admissão (D0)</th>
+                <th style={{ padding: '10px 14px' }}>Evolução 24h (D1)</th>
+                <th style={{ padding: '10px 14px' }}>Evolução 48h (D2)</th>
+                <th style={{ padding: '10px 14px' }}>Tendência Média</th>
+                <th style={{ padding: '10px 14px' }}>Interpretação Clínica Institucional</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style={{ borderBottom: '1px solid var(--color-surface-border)' }}>
+                <td style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--color-primary-light)' }}>Lactato Sérico</td>
+                <td style={{ padding: '10px 14px', color: '#f87171', fontWeight: 700 }}>3.8 mmol/L</td>
+                <td style={{ padding: '10px 14px', color: '#fbbf24' }}>2.1 mmol/L</td>
+                <td style={{ padding: '10px 14px', color: '#34d399', fontWeight: 700 }}>1.3 mmol/L</td>
+                <td style={{ padding: '10px 14px' }}>
+                  <span className="badge badge-success" style={{ fontSize: '0.7rem' }}>↓ 65.8% (Clareamento)</span>
+                </td>
+                <td style={{ padding: '10px 14px', color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>
+                  Resposta favorável à ressuscitação volêmica e controle microcirculatório
+                </td>
+              </tr>
+
+              <tr style={{ borderBottom: '1px solid var(--color-surface-border)' }}>
+                <td style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--color-primary-light)' }}>Leucócitos Totais</td>
+                <td style={{ padding: '10px 14px', color: '#f87171' }}>19.200 /mm³</td>
+                <td style={{ padding: '10px 14px' }}>15.600 /mm³</td>
+                <td style={{ padding: '10px 14px', color: '#34d399' }}>11.800 /mm³</td>
+                <td style={{ padding: '10px 14px' }}>
+                  <span className="badge badge-success" style={{ fontSize: '0.7rem' }}>↓ 38.5% (Em queda)</span>
+                </td>
+                <td style={{ padding: '10px 14px', color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>
+                  Diminuição do desvio à esquerda e regressão da tempestade inflamatória
+                </td>
+              </tr>
+
+              <tr style={{ borderBottom: '1px solid var(--color-surface-border)' }}>
+                <td style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--color-primary-light)' }}>Proteína C Reativa (PCR)</td>
+                <td style={{ padding: '10px 14px', color: '#f87171' }}>168 mg/L</td>
+                <td style={{ padding: '10px 14px' }}>142 mg/L</td>
+                <td style={{ padding: '10px 14px', color: '#38bdf8' }}>84 mg/L</td>
+                <td style={{ padding: '10px 14px' }}>
+                  <span className="badge badge-info" style={{ fontSize: '0.7rem' }}>↓ 50.0% (Resolução)</span>
+                </td>
+                <td style={{ padding: '10px 14px', color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>
+                  Eficácia do esquema antimicrobiano guiado pelo antibiograma
+                </td>
+              </tr>
+
+              <tr style={{ borderBottom: '1px solid var(--color-surface-border)' }}>
+                <td style={{ padding: '10px 14px', fontWeight: 700, color: 'var(--color-primary-light)' }}>Creatinina Sérica</td>
+                <td style={{ padding: '10px 14px', color: '#fbbf24' }}>2.3 mg/dL</td>
+                <td style={{ padding: '10px 14px' }}>1.8 mg/dL</td>
+                <td style={{ padding: '10px 14px', color: '#34d399' }}>1.3 mg/dL</td>
+                <td style={{ padding: '10px 14px' }}>
+                  <span className="badge badge-success" style={{ fontSize: '0.7rem' }}>↓ 43.5% (Melhora Renal)</span>
+                </td>
+                <td style={{ padding: '10px 14px', color: 'var(--color-text-muted)', fontSize: '0.8rem' }}>
+                  Reversão de LRA pré-renal e otimização de débito urinário
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
   );
 }

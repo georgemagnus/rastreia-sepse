@@ -25,9 +25,12 @@ import {
   BookOpen,
   Pill,
   Wind,
-  ShieldAlert
+  ShieldAlert,
+  Microscope,
+  FileText
 } from 'lucide-react';
 import { calculateEvolution, checkCasePendencies } from '../services/caseService';
+import { getCaseCriticalAlerts } from './ClinicalAlertModal';
 
 export default function Dashboard({ 
   cases, 
@@ -39,7 +42,15 @@ export default function Dashboard({
   onOpenProtocolDoc,
   onOpenCrisisProtocols,
   onOpenAntibioticGuide,
-  onOpenDrugDetail
+  onOpenDrugDetail,
+  onOpenLabExams,
+  onOpenCultures,
+  onOpenAntibioticsUsage,
+  onOpenVitalSigns,
+  onOpenMedicalEvolution,
+  onOpenLabTrends,
+  onOpenCcihEvolution,
+  onOpenAlertDetails
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('todos');
@@ -325,6 +336,7 @@ export default function Dashboard({
                 {filteredCases.map((c) => {
                   const evolution = calculateEvolution(c);
                   const { flags, pendingCount, mismatch } = checkCasePendencies(c);
+                  const caseAlerts = getCaseCriticalAlerts(c);
 
                   return (
                     <tr 
@@ -336,11 +348,41 @@ export default function Dashboard({
                       onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--color-surface-hover)'}
                       onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
                     >
-                      {/* Paciente e Leito */}
+                      {/* Paciente e Leito + Sinais de Alerta com Blink */}
                       <td style={{ padding: '14px 18px' }}>
-                        <div style={{ fontWeight: 700, color: 'var(--color-text-main)', fontSize: '0.92rem' }}>
-                          {c.patientName}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                          <span style={{ fontWeight: 800, color: 'var(--color-text-main)', fontSize: '0.94rem' }}>
+                            {c.patientName}
+                          </span>
+                          
+                          {/* SINAL DE ALERTA COM BLINK ANIMADO */}
+                          {caseAlerts.length > 0 && (
+                            <button
+                              type="button"
+                              onClick={() => onOpenAlertDetails && onOpenAlertDetails(c)}
+                              className="alert-blink"
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 4,
+                                padding: '2px 8px',
+                                borderRadius: 'var(--radius-full)',
+                                background: caseAlerts.some(a => a.level === 'critical') ? '#ef4444' : '#f59e0b',
+                                color: '#ffffff',
+                                border: 'none',
+                                fontSize: '0.68rem',
+                                fontWeight: 800,
+                                cursor: 'pointer',
+                                boxShadow: '0 0 10px rgba(239, 68, 68, 0.6)'
+                              }}
+                              title="SINAIS DE ALERTA ATIVOS! Clique para ver motivos detalhados e condutas imediatas"
+                            >
+                              <AlertTriangle size={12} />
+                              <span>{caseAlerts.length} ALERTA(S)</span>
+                            </button>
+                          )}
                         </div>
+
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: '0.75rem', color: 'var(--color-text-dim)', marginTop: 3 }}>
                           <span>Prontuário: <strong>{c.medicalRecord}</strong></span>
                           <span>•</span>
@@ -421,123 +463,181 @@ export default function Dashboard({
                         )}
                       </td>
 
-                      {/* Pendências, Bundle 1h & Antibiograma */}
+                      {/* Coluna: Modais Clínicos & Pendências */}
                       <td style={{ padding: '14px 18px' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                           
-                          {/* Ícone 1: Lactato */}
+                          {/* 1. Botão Exames Laboratoriais */}
                           <button
                             type="button"
-                            onClick={() => onOpenPendencies(c)}
-                            title={flags.lactate.label}
+                            onClick={() => onOpenLabExams && onOpenLabExams(c)}
+                            className="btn btn-sm"
                             style={{
-                              width: 30,
-                              height: 30,
-                              borderRadius: 'var(--radius-sm)',
-                              background: flags.lactate.status === 'ok' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                              border: `1px solid ${flags.lactate.status === 'ok' ? '#10b981' : '#ef4444'}`,
-                              display: 'flex',
+                              padding: '5px 8px',
+                              fontSize: '0.74rem',
+                              background: 'rgba(2, 132, 199, 0.15)',
+                              border: '1px solid rgba(2, 132, 199, 0.35)',
+                              color: '#38bdf8',
+                              display: 'inline-flex',
                               alignItems: 'center',
-                              justifyContent: 'center',
-                              cursor: 'pointer'
+                              gap: 4
                             }}
+                            title="1. Exames Laboratoriais (Hemograma, Lactato, Gasometrias, PCR, Bilirrubina, Renal, Hepático, Imagem...)"
                           >
-                            <Droplet size={15} color={flags.lactate.status === 'ok' ? '#10b981' : '#ef4444'} />
+                            <FlaskConical size={14} />
+                            <span>Exames</span>
+                            {c.organDysfunction?.lactateAbove2 && (
+                              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#ef4444' }} />
+                            )}
                           </button>
 
-                          {/* Ícone 2: Hemoculturas antes do ATB */}
+                          {/* 2. Botão Culturas & TSA */}
                           <button
                             type="button"
-                            onClick={() => onOpenPendencies(c)}
-                            title={flags.cultures.label}
+                            onClick={() => onOpenCultures && onOpenCultures(c)}
+                            className="btn btn-sm"
                             style={{
-                              width: 30,
-                              height: 30,
-                              borderRadius: 'var(--radius-sm)',
-                              background: flags.cultures.status === 'ok' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                              border: `1px solid ${flags.cultures.status === 'ok' ? '#10b981' : '#f59e0b'}`,
-                              display: 'flex',
+                              padding: '5px 8px',
+                              fontSize: '0.74rem',
+                              background: 'rgba(139, 92, 246, 0.15)',
+                              border: '1px solid rgba(139, 92, 246, 0.35)',
+                              color: '#c084fc',
+                              display: 'inline-flex',
                               alignItems: 'center',
-                              justifyContent: 'center',
-                              cursor: 'pointer'
+                              gap: 4
                             }}
+                            title="2. Culturas & Antibiograma (Hemoculturas, Urocultura, TSA e Sensibilidade)"
                           >
-                            <FlaskConical size={15} color={flags.cultures.status === 'ok' ? '#10b981' : '#f59e0b'} />
+                            <Microscope size={14} />
+                            <span>Culturas</span>
+                            {c.telemetryAndExams?.isolatedPathogen && (
+                              <span style={{ fontSize: '0.65rem', padding: '1px 4px', borderRadius: 4, background: '#8b5cf6', color: '#fff' }}>+</span>
+                            )}
                           </button>
 
-                          {/* Ícone 3: Antibiótico 1ª Hora */}
+                          {/* 3. Botão Antibióticos Utilizados */}
                           <button
                             type="button"
-                            onClick={() => onOpenPendencies(c)}
-                            title={flags.antibiotic.label}
+                            onClick={() => onOpenAntibioticsUsage && onOpenAntibioticsUsage(c)}
+                            className="btn btn-sm"
                             style={{
-                              width: 30,
-                              height: 30,
-                              borderRadius: 'var(--radius-sm)',
-                              background: flags.antibiotic.status === 'ok' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)',
-                              border: `1px solid ${flags.antibiotic.status === 'ok' ? '#10b981' : '#ef4444'}`,
-                              display: 'flex',
+                              padding: '5px 8px',
+                              fontSize: '0.74rem',
+                              background: 'rgba(16, 185, 129, 0.15)',
+                              border: '1px solid rgba(16, 185, 129, 0.35)',
+                              color: '#34d399',
+                              display: 'inline-flex',
                               alignItems: 'center',
-                              justifyContent: 'center',
-                              cursor: 'pointer'
+                              gap: 4
                             }}
+                            title="3. Antibióticos Utilizados (Esquema Atual, Posologia, Dias de Uso e Modificações)"
                           >
-                            <Syringe size={15} color={flags.antibiotic.status === 'ok' ? '#10b981' : '#ef4444'} />
+                            <Pill size={14} />
+                            <span>ATB</span>
                           </button>
 
-                          {/* Ícone 4: Avaliação Médica */}
+                          {/* 4. Botão Sinais Vitais (Enfermagem) */}
                           <button
                             type="button"
-                            onClick={() => onOpenPendencies(c)}
-                            title={flags.medicalEvaluation.label}
+                            onClick={() => onOpenVitalSigns && onOpenVitalSigns(c)}
+                            className="btn btn-sm"
                             style={{
-                              width: 30,
-                              height: 30,
-                              borderRadius: 'var(--radius-sm)',
-                              background: flags.medicalEvaluation.status === 'ok' ? 'rgba(56, 189, 248, 0.15)' : 'rgba(245, 158, 11, 0.15)',
-                              border: `1px solid ${flags.medicalEvaluation.status === 'ok' ? '#38bdf8' : '#f59e0b'}`,
-                              display: 'flex',
+                              padding: '5px 8px',
+                              fontSize: '0.74rem',
+                              background: 'rgba(239, 68, 68, 0.15)',
+                              border: '1px solid rgba(239, 68, 68, 0.35)',
+                              color: '#f87171',
+                              display: 'inline-flex',
                               alignItems: 'center',
-                              justifyContent: 'center',
-                              cursor: 'pointer'
+                              gap: 4
                             }}
+                            title="4. Evolução de Sinais Vitais (Enfermagem, PAM, FC, FR, Temp, SpO2, Glasgow, Diurese)"
                           >
-                            <Stethoscope size={15} color={flags.medicalEvaluation.status === 'ok' ? '#38bdf8' : '#f59e0b'} />
+                            <HeartPulse size={14} />
+                            <span>Sinais</span>
                           </button>
 
-                          {/* Ícone 5: SCIRAS */}
+                          {/* 5. Botão Evolução Médica */}
                           <button
                             type="button"
-                            onClick={() => onOpenPendencies(c)}
-                            title={flags.sciras.label}
+                            onClick={() => onOpenMedicalEvolution && onOpenMedicalEvolution(c)}
+                            className="btn btn-sm"
                             style={{
-                              width: 30,
-                              height: 30,
-                              borderRadius: 'var(--radius-sm)',
-                              background: flags.sciras.status === 'ok' ? 'rgba(139, 92, 246, 0.15)' : 'rgba(100, 116, 139, 0.15)',
-                              border: `1px solid ${flags.sciras.status === 'ok' ? '#a855f7' : '#64748b'}`,
-                              display: 'flex',
+                              padding: '5px 8px',
+                              fontSize: '0.74rem',
+                              background: 'rgba(56, 189, 248, 0.15)',
+                              border: '1px solid rgba(56, 189, 248, 0.35)',
+                              color: '#7dd3fc',
+                              display: 'inline-flex',
                               alignItems: 'center',
-                              justifyContent: 'center',
-                              cursor: 'pointer'
+                              gap: 4
                             }}
+                            title="5. Evolução Médica (Impressões Clínicas, Condutas e SOFA)"
                           >
-                            <ShieldCheck size={15} color={flags.sciras.status === 'ok' ? '#a855f7' : '#94a3b8'} />
+                            <Stethoscope size={14} />
+                            <span>Evol. Médica</span>
                           </button>
 
+                          {/* 6. Botão Tendência de Exames / Estatísticas */}
+                          <button
+                            type="button"
+                            onClick={() => onOpenLabTrends && onOpenLabTrends(c)}
+                            className="btn btn-sm"
+                            style={{
+                              padding: '5px 8px',
+                              fontSize: '0.74rem',
+                              background: 'rgba(245, 158, 11, 0.15)',
+                              border: '1px solid rgba(245, 158, 11, 0.35)',
+                              color: '#fbbf24',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 4
+                            }}
+                            title="6. Estatísticas & Tendência de Exames Laboratoriais (Curvas Cinéticas)"
+                          >
+                            <TrendingUp size={14} />
+                            <span>Tendência</span>
+                          </button>
+
+                          {/* 7. Botão Tabela CCIH */}
+                          <button
+                            type="button"
+                            onClick={() => onOpenCcihEvolution && onOpenCcihEvolution(c)}
+                            className="btn btn-sm"
+                            style={{
+                              padding: '5px 8px',
+                              fontSize: '0.74rem',
+                              background: 'rgba(168, 85, 247, 0.15)',
+                              border: '1px solid rgba(168, 85, 247, 0.35)',
+                              color: '#d8b4fe',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: 4
+                            }}
+                            title="7. Tabela de Evolução da CCIH (Pareceres, Precauções e Stewardship)"
+                          >
+                            <ShieldCheck size={14} />
+                            <span>CCIH</span>
+                          </button>
+
+                          {/* Botão de Pendências gerais da Golden Hour */}
                           {pendingCount > 0 && (
                             <button
                               type="button"
                               onClick={() => onOpenPendencies(c)}
                               style={{
-                                fontSize: '0.72rem',
+                                fontSize: '0.7rem',
                                 color: '#fbbf24',
                                 fontWeight: 700,
                                 textDecoration: 'underline',
-                                marginLeft: 2
+                                cursor: 'pointer',
+                                background: 'none',
+                                border: 'none',
+                                padding: 2
                               }}
+                              title="Ver checklist das pendências da 1ª hora"
                             >
-                              {pendingCount} pendente(s)
+                              ({pendingCount} pendência)
                             </button>
                           )}
                         </div>

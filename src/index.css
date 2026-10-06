@@ -313,6 +313,25 @@ button {
   to { transform: scale(1); opacity: 1; }
 }
 
+@keyframes blinkPulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.75); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 8px rgba(239, 68, 68, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.75); }
+}
+
+.alert-blink {
+  animation: blinkPulse 1.6s infinite ease-in-out;
+}
+
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.pulse-badge {
+  animation: pulseSubtle 2s infinite ease-in-out;
+}
+
 /* Responsive Controls */
 @media (max-width: 768px) {
   .desktop-nav {

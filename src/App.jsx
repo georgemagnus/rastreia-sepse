@@ -14,6 +14,14 @@ import ProtocolDocumentModal from './components/ProtocolDocumentModal';
 import CrisisProtocolsModal from './components/CrisisProtocolsModal';
 import AntibioticGuideModal from './components/AntibioticGuideModal';
 import AntibioticDetailModal from './components/AntibioticDetailModal';
+import LabExamsModal from './components/LabExamsModal';
+import CulturesModal from './components/CulturesModal';
+import AntibioticsUsageModal from './components/AntibioticsUsageModal';
+import VitalSignsModal from './components/VitalSignsModal';
+import MedicalEvolutionModal from './components/MedicalEvolutionModal';
+import LabTrendsModal from './components/LabTrendsModal';
+import CcihEvolutionModal from './components/CcihEvolutionModal';
+import ClinicalAlertModal from './components/ClinicalAlertModal';
 
 function MainApp() {
   const [currentTab, setCurrentTab] = useState('dashboard');
@@ -46,6 +54,31 @@ function MainApp() {
 
   const [drugDetailModalOpen, setDrugDetailModalOpen] = useState(false);
   const [selectedDrugKey, setSelectedDrugKey] = useState('vancomicina');
+
+  // Novos Modais da Coluna de Pendências & Gestão Clínica
+  const [labExamsModalOpen, setLabExamsModalOpen] = useState(false);
+  const [selectedCaseForLabExams, setSelectedCaseForLabExams] = useState(null);
+
+  const [culturesModalOpen, setCulturesModalOpen] = useState(false);
+  const [selectedCaseForCultures, setSelectedCaseForCultures] = useState(null);
+
+  const [antibioticsUsageModalOpen, setAntibioticsUsageModalOpen] = useState(false);
+  const [selectedCaseForAntibioticsUsage, setSelectedCaseForAntibioticsUsage] = useState(null);
+
+  const [vitalSignsModalOpen, setVitalSignsModalOpen] = useState(false);
+  const [selectedCaseForVitalSigns, setSelectedCaseForVitalSigns] = useState(null);
+
+  const [medicalEvolutionModalOpen, setMedicalEvolutionModalOpen] = useState(false);
+  const [selectedCaseForMedicalEvolution, setSelectedCaseForMedicalEvolution] = useState(null);
+
+  const [labTrendsModalOpen, setLabTrendsModalOpen] = useState(false);
+  const [selectedCaseForLabTrends, setSelectedCaseForLabTrends] = useState(null);
+
+  const [ccihEvolutionModalOpen, setCcihEvolutionModalOpen] = useState(false);
+  const [selectedCaseForCcihEvolution, setSelectedCaseForCcihEvolution] = useState(null);
+
+  const [alertModalOpen, setAlertModalOpen] = useState(false);
+  const [selectedCaseForAlert, setSelectedCaseForAlert] = useState(null);
 
   // PWA Install prompt handling
   const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -138,6 +171,47 @@ function MainApp() {
     setDrugDetailModalOpen(true);
   };
 
+  // Handlers para os modais da coluna de pendências e gestão clínica
+  const handleOpenLabExams = (caseData) => {
+    setSelectedCaseForLabExams(caseData);
+    setLabExamsModalOpen(true);
+  };
+
+  const handleOpenCultures = (caseData) => {
+    setSelectedCaseForCultures(caseData);
+    setCulturesModalOpen(true);
+  };
+
+  const handleOpenAntibioticsUsage = (caseData) => {
+    setSelectedCaseForAntibioticsUsage(caseData);
+    setAntibioticsUsageModalOpen(true);
+  };
+
+  const handleOpenVitalSigns = (caseData) => {
+    setSelectedCaseForVitalSigns(caseData);
+    setVitalSignsModalOpen(true);
+  };
+
+  const handleOpenMedicalEvolution = (caseData) => {
+    setSelectedCaseForMedicalEvolution(caseData);
+    setMedicalEvolutionModalOpen(true);
+  };
+
+  const handleOpenLabTrends = (caseData) => {
+    setSelectedCaseForLabTrends(caseData);
+    setLabTrendsModalOpen(true);
+  };
+
+  const handleOpenCcihEvolution = (caseData) => {
+    setSelectedCaseForCcihEvolution(caseData);
+    setCcihEvolutionModalOpen(true);
+  };
+
+  const handleOpenAlertDetails = (caseData) => {
+    setSelectedCaseForAlert(caseData);
+    setAlertModalOpen(true);
+  };
+
   const handleApplySchemeToActiveForm = (schemeText) => {
     if (selectedCaseForEdit) {
       const updated = {
@@ -186,6 +260,14 @@ function MainApp() {
             onOpenCrisisProtocols={handleOpenCrisisProtocols}
             onOpenAntibioticGuide={handleOpenAntibioticGuide}
             onOpenDrugDetail={handleOpenDrugDetail}
+            onOpenLabExams={handleOpenLabExams}
+            onOpenCultures={handleOpenCultures}
+            onOpenAntibioticsUsage={handleOpenAntibioticsUsage}
+            onOpenVitalSigns={handleOpenVitalSigns}
+            onOpenMedicalEvolution={handleOpenMedicalEvolution}
+            onOpenLabTrends={handleOpenLabTrends}
+            onOpenCcihEvolution={handleOpenCcihEvolution}
+            onOpenAlertDetails={handleOpenAlertDetails}
           />
         ) : (
           <StatisticsView cases={cases} />
@@ -281,6 +363,71 @@ function MainApp() {
         isOpen={drugDetailModalOpen}
         onClose={() => setDrugDetailModalOpen(false)}
         drugKey={selectedDrugKey}
+      />
+
+      {/* 1. Modal de Exames Laboratoriais & Imagem */}
+      <LabExamsModal 
+        isOpen={labExamsModalOpen}
+        onClose={() => setLabExamsModalOpen(false)}
+        caseData={selectedCaseForLabExams}
+        onSaveCase={handleSaveCase}
+      />
+
+      {/* 2. Modal de Culturas & Antibiograma (TSA) */}
+      <CulturesModal 
+        isOpen={culturesModalOpen}
+        onClose={() => setCulturesModalOpen(false)}
+        caseData={selectedCaseForCultures}
+        onSaveCase={handleSaveCase}
+      />
+
+      {/* 3. Modal de Antibióticos Utilizados & Modificações */}
+      <AntibioticsUsageModal 
+        isOpen={antibioticsUsageModalOpen}
+        onClose={() => setAntibioticsUsageModalOpen(false)}
+        caseData={selectedCaseForAntibioticsUsage}
+        onSaveCase={handleSaveCase}
+      />
+
+      {/* 4. Modal de Evolução de Sinais Vitais (Enfermagem) */}
+      <VitalSignsModal 
+        isOpen={vitalSignsModalOpen}
+        onClose={() => setVitalSignsModalOpen(false)}
+        caseData={selectedCaseForVitalSigns}
+        onSaveCase={handleSaveCase}
+      />
+
+      {/* 5. Modal de Evolução Médica */}
+      <MedicalEvolutionModal 
+        isOpen={medicalEvolutionModalOpen}
+        onClose={() => setMedicalEvolutionModalOpen(false)}
+        caseData={selectedCaseForMedicalEvolution}
+        onSaveCase={handleSaveCase}
+      />
+
+      {/* 6. Modal de Estatísticas & Tendência de Exames */}
+      <LabTrendsModal 
+        isOpen={labTrendsModalOpen}
+        onClose={() => setLabTrendsModalOpen(false)}
+        caseData={selectedCaseForLabTrends}
+      />
+
+      {/* 7. Modal de Tabela de Evolução da CCIH */}
+      <CcihEvolutionModal 
+        isOpen={ccihEvolutionModalOpen}
+        onClose={() => setCcihEvolutionModalOpen(false)}
+        caseData={selectedCaseForCcihEvolution}
+        onSaveCase={handleSaveCase}
+      />
+
+      {/* 8. Modal de Sinais de Alerta Críticos (Blink na Dashboard) */}
+      <ClinicalAlertModal 
+        isOpen={alertModalOpen}
+        onClose={() => setAlertModalOpen(false)}
+        caseData={selectedCaseForAlert}
+        onOpenCrisisProtocols={handleOpenCrisisProtocols}
+        onOpenAntibioticGuide={handleOpenAntibioticGuide}
+        onOpenLabExams={handleOpenLabExams}
       />
     </div>
   );
