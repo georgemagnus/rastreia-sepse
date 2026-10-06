@@ -18,6 +18,7 @@ import {
   Pill,
   ShieldAlert
 } from 'lucide-react';
+import SepsisRibbonLogo from './SepsisRibbonLogo';
 
 export default function Navbar({ 
   currentTab, 
@@ -56,28 +57,36 @@ export default function Navbar({
         {/* Brand / Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <div style={{
-            width: 42,
-            height: 42,
+            width: 44,
+            height: 44,
             borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(135deg, #0284c7 0%, #0369a1 100%)',
+            background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.16) 0%, rgba(15, 23, 42, 0.9) 100%)',
+            border: '1px solid rgba(239, 68, 68, 0.35)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 12px rgba(2, 132, 199, 0.3)'
+            boxShadow: '0 4px 14px rgba(220, 38, 38, 0.25)',
+            flexShrink: 0
           }}>
-            <Activity size={24} color="#ffffff" />
+            <SepsisRibbonLogo size={36} />
           </div>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <span style={{ 
-                fontSize: '1.2rem', 
+                fontSize: '1.25rem', 
                 fontWeight: 800, 
                 letterSpacing: '-0.02em', 
                 color: 'var(--color-text-main)' 
               }}>
-                Rastreia<span style={{ color: 'var(--color-primary-light)' }}>Sepse</span>
+                Rastreia<span style={{ color: '#ef4444' }}>Sepse</span>
               </span>
-              <span className="badge badge-info" style={{ fontSize: '0.65rem', padding: '2px 6px' }}>PWA</span>
+              <span className="badge badge-danger" style={{ 
+                fontSize: '0.65rem', 
+                padding: '2px 6px',
+                background: 'rgba(239, 68, 68, 0.15)',
+                color: '#f87171',
+                border: '1px solid rgba(239, 68, 68, 0.3)'
+              }}>PWA</span>
             </div>
             <div style={{ fontSize: '0.72rem', color: 'var(--color-text-dim)', fontWeight: 500 }}>
               Protocolo de Sepse Adulto • CHCF / PB

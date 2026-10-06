@@ -1,49 +1,137 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0369a1" />
-      <stop offset="50%" stop-color="#0284c7" />
-      <stop offset="100%" stop-color="#0f172a" />
+    <!-- Background Gradient -->
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" />
+      <stop offset="50%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#090d16" />
     </linearGradient>
-    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+
+    <!-- Metallic Red Ribbon Gradients -->
+    <linearGradient id="redRibbonTop" x1="0%" y1="0%" x2="100%" y2="80%">
       <stop offset="0%" stop-color="#ef4444" />
-      <stop offset="100%" stop-color="#dc2626" />
+      <stop offset="40%" stop-color="#dc2626" />
+      <stop offset="100%" stop-color="#991b1b" />
     </linearGradient>
-    <linearGradient id="crossGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8" />
-      <stop offset="100%" stop-color="#bae6fd" />
+
+    <linearGradient id="redRibbonFlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#b91c1c" />
+      <stop offset="45%" stop-color="#ef4444" />
+      <stop offset="85%" stop-color="#dc2626" />
+      <stop offset="100%" stop-color="#7f1d1d" />
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.35" />
+
+    <!-- Dark Charcoal Ribbon Gradients -->
+    <linearGradient id="blackRibbonLoop" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="50%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+
+    <linearGradient id="blackRibbonTail" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#64748b" />
+      <stop offset="60%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#1e293b" />
+    </linearGradient>
+
+    <!-- Shadow filter -->
+    <filter id="ribbonShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <!-- Subtle Red Glow -->
+    <filter id="redGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur" />
+      <feComposite in="SourceGraphic" in2="blur" operator="over" />
     </filter>
   </defs>
 
-  <!-- Rounded App Background -->
-  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  <!-- App Rounded Background Container -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGradient)" stroke="rgba(255,255,255,0.08)" stroke-width="3" />
 
-  <!-- Medical Hexagon / Shield Badge -->
-  <polygon points="256,64 416,156 416,356 256,448 96,356 96,156" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.18)" stroke-width="4" filter="url(#shadow)" />
+  <!-- Subtle Medical Ambient Rings -->
+  <circle cx="256" cy="256" r="210" fill="none" stroke="rgba(239,68,68,0.12)" stroke-width="2" />
+  <circle cx="256" cy="256" r="170" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="2" stroke-dasharray="8 6" />
 
-  <!-- Stylized Medical Cross with Pulse -->
-  <g filter="url(#shadow)">
-    <!-- Central Cross Glow -->
-    <rect x="226" y="140" width="60" height="232" rx="16" fill="url(#crossGrad)" />
-    <rect x="140" y="226" width="232" height="60" rx="16" fill="url(#crossGrad)" />
+  <!-- Group with Shadow: Sepsis Awareness Ribbon (Red & Black) -->
+  <g filter="url(#ribbonShadow)" transform="translate(48, 28) scale(0.82)">
     
-    <!-- Heart rate / EKG trace over cross -->
-    <path d="M 120 256 L 195 256 L 220 185 L 245 325 L 270 215 L 290 280 L 310 256 L 392 256" 
-          fill="none" 
-          stroke="#ef4444" 
-          stroke-width="14" 
-          stroke-linecap="round" 
-          stroke-linejoin="round" />
+    <!-- 1. Right Black Loop (Back layer) -->
+    <path d="M 235 60 
+             C 275 60, 315 95, 315 155 
+             C 315 205, 275 250, 240 285 
+             L 170 345 
+             L 135 320 
+             C 175 275, 260 190, 260 150 
+             C 260 115, 235 95, 205 95 
+             C 185 95, 170 105, 160 118 
+             Z" 
+          fill="url(#blackRibbonLoop)" />
 
-    <!-- Pulse point glow -->
-    <circle cx="245" cy="325" r="9" fill="#ffffff" />
-    <circle cx="220" cy="185" r="9" fill="#ffffff" />
+    <!-- 2. Black Left Tail -->
+    <path d="M 240 285 
+             L 170 345 
+             L 115 385 
+             L 105 320 
+             L 175 270 
+             Z" 
+          fill="url(#blackRibbonTail)" />
+
+    <!-- 3. Red Main Loop (Top Left & Crossing in front) -->
+    <path d="M 195 55 
+             C 245 55, 275 80, 285 105 
+             L 245 130 
+             C 235 100, 215 90, 195 90 
+             C 160 90, 135 125, 135 175 
+             C 135 220, 165 260, 210 295 
+             L 285 355 
+             L 255 385 
+             C 205 340, 95 245, 95 165 
+             C 95 95, 140 55, 195 55 
+             Z" 
+          fill="url(#redRibbonTop)" />
+
+    <!-- 4. Inner red highlight curve for 3D silk ribbon reflection -->
+    <path d="M 195 55 
+             C 245 55, 275 80, 285 105 
+             C 275 90, 240 70, 195 70 
+             C 150 70, 115 105, 110 165 
+             C 108 145, 120 100, 150 75 
+             C 165 62, 180 55, 195 55 
+             Z" 
+          fill="#fca5a5" 
+          opacity="0.35" />
+
+    <!-- 5. Lower Flowing Red Wave Ribbon (Sepsis trailing tail) -->
+    <path d="M 245 320 
+             C 285 350, 360 405, 410 445 
+             C 435 465, 440 485, 435 505 
+             C 425 535, 385 570, 320 610 
+             L 320 545 
+             C 365 515, 395 490, 395 475 
+             C 395 460, 360 435, 310 395 
+             L 245 345 
+             Z" 
+          fill="url(#redRibbonFlow)" />
+
+    <!-- 6. Ribbon 3D Edge Shading Fold -->
+    <path d="M 410 445 
+             C 435 465, 440 485, 435 505 
+             C 425 535, 385 570, 320 610 
+             L 320 595 
+             C 375 560, 410 528, 418 502 
+             C 422 488, 418 472, 400 455 
+             Z" 
+          fill="#450a0a" 
+          opacity="0.5" />
   </g>
 
-  <!-- Subtle Target / Radar rings for 'Rastreia' -->
-  <circle cx="256" cy="256" r="160" fill="none" stroke="rgba(56,189,248,0.22)" stroke-width="2" stroke-dasharray="12 8" />
-  <circle cx="256" cy="256" r="200" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2" />
+  <!-- Pulse line (ECG / Batimento) integrated across bottom for clinical identity -->
+  <path d="M 64 430 L 140 430 L 155 405 L 175 455 L 195 385 L 210 440 L 225 430 L 290 430" 
+        fill="none" 
+        stroke="#ef4444" 
+        stroke-width="5" 
+        stroke-linecap="round" 
+        stroke-linejoin="round" 
+        opacity="0.45" />
 </svg>
