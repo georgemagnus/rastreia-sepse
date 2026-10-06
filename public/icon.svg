@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0369a1" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+    <linearGradient id="heartGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ef4444" />
+      <stop offset="100%" stop-color="#dc2626" />
+    </linearGradient>
+    <linearGradient id="crossGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8" />
+      <stop offset="100%" stop-color="#bae6fd" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Rounded App Background -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+
+  <!-- Medical Hexagon / Shield Badge -->
+  <polygon points="256,64 416,156 416,356 256,448 96,356 96,156" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.18)" stroke-width="4" filter="url(#shadow)" />
+
+  <!-- Stylized Medical Cross with Pulse -->
+  <g filter="url(#shadow)">
+    <!-- Central Cross Glow -->
+    <rect x="226" y="140" width="60" height="232" rx="16" fill="url(#crossGrad)" />
+    <rect x="140" y="226" width="232" height="60" rx="16" fill="url(#crossGrad)" />
+    
+    <!-- Heart rate / EKG trace over cross -->
+    <path d="M 120 256 L 195 256 L 220 185 L 245 325 L 270 215 L 290 280 L 310 256 L 392 256" 
+          fill="none" 
+          stroke="#ef4444" 
+          stroke-width="14" 
+          stroke-linecap="round" 
+          stroke-linejoin="round" />
+
+    <!-- Pulse point glow -->
+    <circle cx="245" cy="325" r="9" fill="#ffffff" />
+    <circle cx="220" cy="185" r="9" fill="#ffffff" />
+  </g>
+
+  <!-- Subtle Target / Radar rings for 'Rastreia' -->
+  <circle cx="256" cy="256" r="160" fill="none" stroke="rgba(56,189,248,0.22)" stroke-width="2" stroke-dasharray="12 8" />
+  <circle cx="256" cy="256" r="200" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="2" />
+</svg>
