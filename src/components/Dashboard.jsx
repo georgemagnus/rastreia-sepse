@@ -27,7 +27,8 @@ import {
   Wind,
   ShieldAlert,
   Microscope,
-  FileText
+  FileText,
+  ClipboardList
 } from 'lucide-react';
 import { calculateEvolution, checkCasePendencies } from '../services/caseService';
 import { getCaseCriticalAlerts } from './ClinicalAlertModal';
@@ -328,7 +329,10 @@ export default function Dashboard({
                   <th style={{ padding: '14px 18px', fontWeight: 700 }}>Abertura Protocolo</th>
                   <th style={{ padding: '14px 18px', fontWeight: 700 }}>Evolução</th>
                   <th style={{ padding: '14px 18px', fontWeight: 700 }}>Classificação & Crise</th>
-                  <th style={{ padding: '14px 18px', fontWeight: 700 }}>Pendências & Antibiograma</th>
+                  <th style={{ padding: '14px 18px', fontWeight: 700 }}>
+                    <span className="btn-responsive-text">Pendências & Antibiograma</span>
+                    <span className="only-mobile-inline">Pendências</span>
+                  </th>
                   <th style={{ padding: '14px 18px', fontWeight: 700, textAlign: 'right' }}>Ações</th>
                 </tr>
               </thead>
@@ -487,7 +491,7 @@ export default function Dashboard({
                             <FlaskConical size={14} />
                             <span className="btn-responsive-text">Exames</span>
                             {c.organDysfunction?.lactateAbove2 && (
-                              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#dc2626' }} />
+                              <span className="btn-indicator-dot" style={{ width: 6, height: 6, borderRadius: '50%', background: '#dc2626' }} />
                             )}
                           </button>
 
@@ -511,7 +515,7 @@ export default function Dashboard({
                             <Microscope size={14} />
                             <span className="btn-responsive-text">Culturas</span>
                             {c.telemetryAndExams?.isolatedPathogen && (
-                              <span style={{ fontSize: '0.65rem', padding: '1px 4px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>+</span>
+                              <span className="btn-indicator-badge" style={{ fontSize: '0.65rem', padding: '1px 4px', borderRadius: 4, background: '#7c3aed', color: '#fff' }}>+</span>
                             )}
                           </button>
 
@@ -625,19 +629,25 @@ export default function Dashboard({
                             <button
                               type="button"
                               onClick={() => onOpenPendencies(c)}
+                              className="btn btn-sm btn-responsive-compact"
                               style={{
-                                fontSize: '0.7rem',
-                                color: '#fbbf24',
-                                fontWeight: 700,
-                                textDecoration: 'underline',
-                                cursor: 'pointer',
-                                background: 'none',
-                                border: 'none',
-                                padding: 2
+                                padding: '5px 8px',
+                                fontSize: '0.74rem',
+                                background: 'rgba(217, 119, 6, 0.12)',
+                                border: '1px solid rgba(217, 119, 6, 0.35)',
+                                color: '#d97706',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: 4,
+                                fontWeight: 700
                               }}
-                              title="Ver checklist das pendências da 1ª hora"
+                              title={`Checklist das pendências da 1ª hora (${pendingCount} pendência${pendingCount > 1 ? 's' : ''})`}
                             >
-                              ({pendingCount} pendência)
+                              <ClipboardList size={14} />
+                              <span className="btn-responsive-text">Pendências ({pendingCount})</span>
+                              <span className="btn-indicator-badge only-mobile-badge" style={{ fontSize: '0.62rem', padding: '1px 3px', borderRadius: 3, background: '#d97706', color: '#fff' }}>
+                                {pendingCount}
+                              </span>
                             </button>
                           )}
                         </div>
@@ -647,7 +657,7 @@ export default function Dashboard({
                           <div style={{ marginTop: 6 }}>
                             <button
                               type="button"
-                              className="badge badge-danger"
+                              className="badge badge-danger btn-responsive-compact"
                               onClick={() => onOpenAntibioticGuide && onOpenAntibioticGuide(c.sciras?.specificFocus, c)}
                               style={{ 
                                 cursor: 'pointer', 
@@ -658,10 +668,10 @@ export default function Dashboard({
                                 alignItems: 'center',
                                 gap: 4
                               }}
-                              title={mismatch.mismatchDetails?.reason}
+                              title={`Aviso Crítico Antibiograma Incompatível: ${mismatch.mismatchDetails?.reason}`}
                             >
                               <AlertTriangle size={12} />
-                              <span>Antibiograma Incompatível! ({mismatch.mismatchDetails?.pathogen?.split(' ')[0]})</span>
+                              <span className="btn-responsive-text">Antibiograma Incompatível! ({mismatch.mismatchDetails?.pathogen?.split(' ')[0]})</span>
                             </button>
                           </div>
                         )}
