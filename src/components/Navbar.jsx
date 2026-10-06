@@ -60,12 +60,12 @@ export default function Navbar({
             width: 44,
             height: 44,
             borderRadius: 'var(--radius-md)',
-            background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.16) 0%, rgba(15, 23, 42, 0.9) 100%)',
-            border: '1px solid rgba(239, 68, 68, 0.35)',
+            background: 'linear-gradient(135deg, #ffffff 0%, #fff1f2 100%)',
+            border: '1px solid rgba(239, 68, 68, 0.25)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            boxShadow: '0 4px 14px rgba(220, 38, 38, 0.25)',
+            boxShadow: '0 2px 10px rgba(220, 38, 38, 0.15)',
             flexShrink: 0
           }}>
             <SepsisRibbonLogo size={36} />
@@ -82,10 +82,7 @@ export default function Navbar({
               </span>
               <span className="badge badge-danger" style={{ 
                 fontSize: '0.65rem', 
-                padding: '2px 6px',
-                background: 'rgba(239, 68, 68, 0.15)',
-                color: '#f87171',
-                border: '1px solid rgba(239, 68, 68, 0.3)'
+                padding: '2px 6px'
               }}>PWA</span>
             </div>
             <div style={{ fontSize: '0.72rem', color: 'var(--color-text-dim)', fontWeight: 500 }}>

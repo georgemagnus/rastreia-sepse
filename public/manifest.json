@@ -4,8 +4,8 @@
   "description": "Sistema PWA de Gestão e Triagem do Protocolo de Sepse Adulto Beira-Leito",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
   "orientation": "portrait-primary",
   "icons": [
     {

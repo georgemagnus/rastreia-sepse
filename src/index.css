@@ -2,45 +2,45 @@
   --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  /* Clinical Color Palette */
-  --color-bg: #0b1120;
-  --color-surface: #131d31;
-  --color-surface-hover: #1e2c47;
-  --color-surface-border: #223455;
-  --color-surface-subtle: #0f172a;
+  /* Modern Hospital Clinical Light Theme */
+  --color-bg: #f8fafc;
+  --color-surface: #ffffff;
+  --color-surface-hover: #f1f5f9;
+  --color-surface-border: #e2e8f0;
+  --color-surface-subtle: #f8fafc;
 
   --color-primary: #0284c7;
   --color-primary-hover: #0369a1;
-  --color-primary-light: #38bdf8;
-  --color-primary-bg: rgba(2, 132, 199, 0.12);
+  --color-primary-light: #0284c7;
+  --color-primary-bg: rgba(2, 132, 199, 0.08);
 
-  --color-text-main: #f8fafc;
-  --color-text-muted: #94a3b8;
+  --color-text-main: #0f172a;
+  --color-text-muted: #334155;
   --color-text-dim: #64748b;
 
-  /* Clinical Status Colors */
-  --color-danger: #ef4444;
-  --color-danger-bg: rgba(239, 68, 68, 0.15);
-  --color-danger-border: rgba(239, 68, 68, 0.35);
+  /* Clinical Status Colors (High Contrast on Light Theme) */
+  --color-danger: #dc2626;
+  --color-danger-bg: #fef2f2;
+  --color-danger-border: #fecaca;
 
-  --color-warning: #f59e0b;
-  --color-warning-bg: rgba(245, 158, 11, 0.15);
-  --color-warning-border: rgba(245, 158, 11, 0.35);
+  --color-warning: #d97706;
+  --color-warning-bg: #fffbeb;
+  --color-warning-border: #fde68a;
 
-  --color-success: #10b981;
-  --color-success-bg: rgba(16, 185, 129, 0.15);
-  --color-success-border: rgba(16, 185, 129, 0.35);
+  --color-success: #059669;
+  --color-success-bg: #ecfdf5;
+  --color-success-border: #a7f3d0;
 
-  --color-info: #06b6d4;
-  --color-info-bg: rgba(6, 182, 212, 0.15);
+  --color-info: #0284c7;
+  --color-info-bg: #f0f9ff;
 
-  --color-purple: #8b5cf6;
-  --color-purple-bg: rgba(139, 92, 246, 0.15);
+  --color-purple: #7c3aed;
+  --color-purple-bg: #f5f3ff;
 
-  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.25);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.35);
-  --shadow-glow: 0 0 20px rgba(2, 132, 199, 0.25);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.07);
+  --shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.12);
+  --shadow-glow: 0 0 16px rgba(2, 132, 199, 0.15);
 
   --radius-sm: 6px;
   --radius-md: 10px;
@@ -50,29 +50,6 @@
 
   --transition-fast: 0.15s ease;
   --transition-normal: 0.25s ease;
-}
-
-/* Light Mode support */
-[data-theme="light"] {
-  --color-bg: #f8fafc;
-  --color-surface: #ffffff;
-  --color-surface-hover: #f1f5f9;
-  --color-surface-border: #e2e8f0;
-  --color-surface-subtle: #f8fafc;
-
-  --color-primary: #0284c7;
-  --color-primary-hover: #0369a1;
-  --color-primary-light: #0ea5e9;
-  --color-primary-bg: rgba(2, 132, 199, 0.08);
-
-  --color-text-main: #0f172a;
-  --color-text-muted: #475569;
-  --color-text-dim: #94a3b8;
-
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.12);
-  --shadow-glow: 0 0 15px rgba(2, 132, 199, 0.15);
 }
 
 * {
@@ -98,14 +75,14 @@ body {
   height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: var(--color-bg);
+  background: #f1f5f9;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-surface-border);
+  background: #cbd5e1;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-dim);
+  background: #94a3b8;
 }
 
 /* Common UI Elements */
@@ -191,51 +168,52 @@ button {
 
 .badge-danger {
   background: var(--color-danger-bg);
-  color: #f87171;
+  color: var(--color-danger);
   border: 1px solid var(--color-danger-border);
 }
 .badge-warning {
   background: var(--color-warning-bg);
-  color: #fbbf24;
+  color: var(--color-warning);
   border: 1px solid var(--color-warning-border);
 }
 .badge-success {
   background: var(--color-success-bg);
-  color: #34d399;
+  color: var(--color-success);
   border: 1px solid var(--color-success-border);
 }
 .badge-info {
   background: var(--color-info-bg);
-  color: #38bdf8;
-  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--color-info);
+  border: 1px solid #bae6fd;
 }
 .badge-purple {
   background: var(--color-purple-bg);
-  color: #c084fc;
-  border: 1px solid rgba(192, 132, 252, 0.3);
+  color: var(--color-purple);
+  border: 1px solid #ddd6fe;
 }
 .badge-neutral {
-  background: var(--color-surface-hover);
-  color: var(--color-text-muted);
-  border: 1px solid var(--color-surface-border);
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
 }
 
-/* Bedside Form styling */
-.form-input, .form-select, .form-textarea {
+/* Bedside Form styling & input-control */
+.form-input, .form-select, .form-textarea, .input-control {
   width: 100%;
-  padding: 10px 14px;
-  background: var(--color-surface-subtle);
-  border: 1px solid var(--color-surface-border);
+  padding: 9px 13px;
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
   border-radius: var(--radius-md);
-  color: var(--color-text-main);
-  font-size: 0.92rem;
+  color: #0f172a;
+  font-size: 0.9rem;
   transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-.form-input:focus, .form-select:focus, .form-textarea:focus {
+.form-input:focus, .form-select:focus, .form-textarea:focus, .input-control:focus {
   outline: none;
+  background: #ffffff;
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.2);
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
 }
 
 .form-label {
@@ -254,18 +232,18 @@ button {
   gap: 12px;
   padding: 12px 14px;
   border-radius: var(--radius-md);
-  background: var(--color-surface);
-  border: 1px solid var(--color-surface-border);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   cursor: pointer;
   transition: all var(--transition-fast);
   user-select: none;
 }
 .checkbox-card:hover {
-  background: var(--color-surface-hover);
-  border-color: var(--color-primary-light);
+  background: #f8fafc;
+  border-color: var(--color-primary);
 }
 .checkbox-card.checked {
-  background: rgba(2, 132, 199, 0.14);
+  background: #f0f9ff;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 1px var(--color-primary);
 }
@@ -279,21 +257,21 @@ button {
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(4, 9, 20, 0.82);
-  backdrop-filter: blur(8px);
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(5px);
   display: flex;
   align-items: center;
-  justify-content: center;
+  justifyContent: center;
   z-index: 1000;
   padding: 16px;
   animation: fadeIn 0.2s ease-out;
 }
 
 .modal-content {
-  background: var(--color-surface);
-  border: 1px solid var(--color-surface-border);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
   border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-lg);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.15);
   max-width: 900px;
   width: 100%;
   max-height: 92vh;
