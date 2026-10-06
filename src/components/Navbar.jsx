@@ -45,20 +45,20 @@ export default function Navbar({
       top: 0,
       zIndex: 100
     }}>
-      <div style={{
+      <div className="navbar-container" style={{
         maxWidth: 1400,
         margin: '0 auto',
-        padding: '12px 20px',
+        padding: '10px 18px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        gap: 16
+        gap: 12
       }}>
         {/* Brand / Logo */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexShrink: 0 }}>
           <div style={{
-            width: 44,
-            height: 44,
+            width: 40,
+            height: 40,
             borderRadius: 'var(--radius-md)',
             background: 'linear-gradient(135deg, #ffffff 0%, #fff1f2 100%)',
             border: '1px solid rgba(239, 68, 68, 0.25)',
@@ -67,13 +67,13 @@ export default function Navbar({
             justifyContent: 'center',
             boxShadow: '0 2px 10px rgba(220, 38, 38, 0.15)',
             flexShrink: 0
-          }}>
-            <SepsisRibbonLogo size={36} />
+          }} title="RastreiaSepse • Protocolo Adulto">
+            <SepsisRibbonLogo size={32} />
           </div>
-          <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div className="nav-brand-text">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
               <span style={{ 
-                fontSize: '1.25rem', 
+                fontSize: '1.2rem', 
                 fontWeight: 800, 
                 letterSpacing: '-0.02em', 
                 color: 'var(--color-text-main)' 
@@ -81,102 +81,105 @@ export default function Navbar({
                 Rastreia<span style={{ color: '#ef4444' }}>Sepse</span>
               </span>
               <span className="badge badge-danger" style={{ 
-                fontSize: '0.65rem', 
-                padding: '2px 6px'
+                fontSize: '0.62rem', 
+                padding: '1px 5px'
               }}>PWA</span>
             </div>
-            <div style={{ fontSize: '0.72rem', color: 'var(--color-text-dim)', fontWeight: 500 }}>
-              Protocolo de Sepse Adulto • CHCF / PB
+            <div className="nav-brand-sub" style={{ fontSize: '0.7rem', color: 'var(--color-text-dim)', fontWeight: 500 }}>
+              Protocolo PTI.001.00 • CHCF/PB
             </div>
           </div>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        {/* Navigation */}
+        <nav className="desktop-nav" style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <button 
-            className={`btn ${currentTab === 'dashboard' ? 'btn-primary' : 'btn-secondary'}`}
+            className={`btn btn-sm nav-icon-btn ${currentTab === 'dashboard' ? 'btn-primary' : 'btn-secondary'}`}
             onClick={() => setCurrentTab('dashboard')}
+            title="Casos & Triagem"
           >
-            <LayoutDashboard size={18} />
-            <span>Casos & Triagem</span>
+            <LayoutDashboard size={17} />
+            <span className="nav-label-text">Casos & Triagem</span>
           </button>
 
           <button 
-            className={`btn ${currentTab === 'statistics' ? 'btn-primary' : 'btn-secondary'}`}
+            className={`btn btn-sm nav-icon-btn ${currentTab === 'statistics' ? 'btn-primary' : 'btn-secondary'}`}
             onClick={() => setCurrentTab('statistics')}
+            title="Estatísticas & Indicadores"
           >
-            <BarChart3 size={18} />
-            <span>Estatísticas & Indicadores</span>
+            <BarChart3 size={17} />
+            <span className="nav-label-text">Estatísticas</span>
           </button>
 
           <button 
-            className="btn btn-secondary"
+            className="btn btn-sm btn-secondary nav-icon-btn"
             onClick={onOpenProtocolDoc}
-            title="Acessar o documento oficial completo do Protocolo PTI.001.00"
+            title="Documento Oficial do Protocolo Institucional PTI.001.00"
             style={{ color: 'var(--color-primary-light)' }}
           >
             <BookOpen size={16} />
-            <span className="hide-mobile">Protocolo PTI.001.00</span>
+            <span className="nav-label-text">Protocolo PTI.001.00</span>
           </button>
 
           <button 
-            className="btn btn-outline-danger btn-sm"
+            className="btn btn-sm btn-outline-danger nav-icon-btn"
             onClick={() => onOpenCrisisProtocols && onOpenCrisisProtocols('hemodynamic')}
             title="Condutas de Emergência: Choque, Falência Respiratória e Classificação KDIGO"
           >
             <ShieldAlert size={15} />
-            <span className="hide-mobile">Crise & KDIGO</span>
+            <span className="nav-label-text">Crise & KDIGO</span>
           </button>
 
           <button 
-            className="btn btn-secondary btn-sm"
+            className="btn btn-sm btn-secondary nav-icon-btn"
             onClick={() => onOpenAntibioticGuide && onOpenAntibioticGuide()}
             title="Guia de Antimicrobianos e Checagem de Antibiograma"
             style={{ color: '#10b981' }}
           >
             <Pill size={15} />
-            <span className="hide-mobile">Antibióticos</span>
+            <span className="nav-label-text">Antibióticos</span>
           </button>
 
           <button 
-            className="btn" 
+            className="btn btn-sm nav-icon-btn" 
             style={{ 
               background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', 
               color: '#fff',
               boxShadow: '0 2px 8px rgba(16, 185, 129, 0.3)' 
             }}
             onClick={onNewCase}
+            title="Abrir Novo Caso de Suspeita de Sepse"
           >
-            <PlusCircle size={18} />
-            <span>Abrir Protocolo</span>
+            <PlusCircle size={17} />
+            <span className="nav-label-text">Abrir Protocolo</span>
           </button>
         </nav>
 
         {/* Right side controls (User, Firebase status, PWA install) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
           {/* PWA Install Button */}
           {deferredPrompt && (
             <button 
-              className="btn btn-secondary btn-sm"
+              className="btn btn-secondary btn-sm nav-icon-btn"
               onClick={onInstallPwa}
               title="Instalar no celular / desktop para uso rápido beira-leito"
               style={{ borderColor: 'var(--color-primary-light)', color: 'var(--color-primary-light)' }}
             >
               <Download size={15} />
-              <span className="hide-mobile">Instalar PWA</span>
+              <span className="nav-label-text">Instalar PWA</span>
             </button>
           )}
 
           {/* Firebase Connection Status Button */}
           <button 
-            className="btn btn-secondary btn-sm"
+            className="btn btn-secondary btn-sm nav-icon-btn"
             onClick={onOpenFirebaseConfig}
-            title="Configuração de Banco de Dados Firebase"
+            title={isFirebaseConnected ? "Firebase Conectado e Ativo" : "Armazenamento Local Offline"}
             style={{ gap: 6 }}
           >
             <Database size={15} color={isFirebaseConnected ? '#10b981' : '#f59e0b'} />
-            <span style={{ fontSize: '0.75rem', color: isFirebaseConnected ? '#10b981' : 'var(--color-text-muted)' }} className="hide-mobile">
-              {isFirebaseConnected ? 'Firebase Ativo' : 'Armazenamento Local'}
+            <span style={{ fontSize: '0.75rem', color: isFirebaseConnected ? '#10b981' : 'var(--color-text-muted)' }} className="nav-label-text">
+              {isFirebaseConnected ? 'Firebase' : 'Local'}
             </span>
           </button>
 
@@ -186,7 +189,7 @@ export default function Navbar({
               <button 
                 className="btn btn-secondary"
                 style={{ 
-                  padding: '6px 12px', 
+                  padding: '5px 12px', 
                   borderRadius: 'var(--radius-full)', 
                   display: 'flex', 
                   alignItems: 'center', 
@@ -194,26 +197,29 @@ export default function Navbar({
                   borderColor: currentUser.role === 'medico' ? 'rgba(56, 189, 248, 0.4)' : 'rgba(16, 185, 129, 0.4)'
                 }}
                 onClick={() => setProfileDropdownOpen(!profileDropdownOpen)}
+                title={`${currentUser.name} (${currentUser.roleLabel || ''} • ${currentUser.councilType}-${currentUser.councilUf} ${currentUser.councilNumber})`}
               >
                 <div style={{
-                  width: 28,
-                  height: 28,
+                  width: 26,
+                  height: 26,
                   borderRadius: '50%',
                   background: currentUser.role === 'medico' ? '#0284c7' : '#059669',
                   color: '#fff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: '0.8rem',
-                  fontWeight: 700
+                  fontSize: '0.78rem',
+                  fontWeight: 700,
+                  flexShrink: 0
                 }}>
                   {currentUser.name.charAt(currentUser.name.startsWith('Dr') ? 4 : 5) || 'U'}
                 </div>
                 <div style={{ textAlign: 'left', lineHeight: 1.2 }}>
-                  <div style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-text-main)' }}>
-                    {currentUser.name.split(' ')[0]} {currentUser.name.split(' ')[1] || ''}
+                  {/* Nome do profissional exibido por inteiro */}
+                  <div className="nav-user-fullname" style={{ fontSize: '0.82rem', fontWeight: 700, color: 'var(--color-text-main)', whiteSpace: 'nowrap' }}>
+                    {currentUser.name}
                   </div>
-                  <div style={{ fontSize: '0.7rem', color: 'var(--color-text-dim)' }}>
+                  <div className="nav-user-council" style={{ fontSize: '0.68rem', color: 'var(--color-text-dim)', whiteSpace: 'nowrap' }}>
                     {currentUser.councilType}-{currentUser.councilUf} {currentUser.councilNumber}
                   </div>
                 </div>
@@ -290,9 +296,9 @@ export default function Navbar({
               )}
             </div>
           ) : (
-            <button className="btn btn-primary btn-sm" onClick={onOpenLogin}>
+            <button className="btn btn-primary btn-sm nav-icon-btn" onClick={onOpenLogin} title="Entrar / Cadastrar Profissional">
               <User size={16} />
-              <span>Entrar / Cadastrar</span>
+              <span className="nav-label-text">Entrar / Cadastrar</span>
             </button>
           )}
 
